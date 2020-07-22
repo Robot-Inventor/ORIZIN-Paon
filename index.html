@@ -3,35 +3,37 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>PAON</title>
+        <title>ORIZIN Paon</title>
     </head>
     <body>
-        <div id="menu_outer">
-            <div id="press_any_keys_page">
-                <h1>何かしらのキーを押してください。</h1>
-            </div>
-            <div id="title_page">
-                <h1>ORIZIN PAON</h1>
-                <button>START</button>
-                <button id="menu_button">MENU</button>
-            </div>
-            <div id="menu_page">
-                <h1><span class="back">←</span>MENU</h1>
-                <button id="setting_button">設定</button>
-                <button id="oss_licence_button">OSSライセンス</button>
-                <button id="about_this_game_button">このゲームについて</button>
-            </div>
-            <div id="setting_page">
-                <h1><span class="back">←</span>設定</h1>
-                BGMを使用する<input type="checkbox" class="toggle" id="toggle_bgm_setting" checked>
-            </div>
-            <div id="oss_licence_page">
-                <h1><span class="back">←</span>OSSライセンス</h1>
-                <span>本ソフトウェアでは，以下のオープンソースソフトウェア（OSS）を使用しています。OSSの名前をクリックするとライセンスが表示されます。</span>
-                <details>
-                    <summary>
-                        PixelMplus（ピクセル・エムプラス）
-                    </summary>
+        <div id="top_page">
+            <div id="overlay"></div>
+            <div id="menu_outer">
+                <div id="press_any_keys_page">
+                    <h1>何かしらのキーを押すか，どこかをクリックしてください。</h1>
+                </div>
+                <div id="title_page">
+                    <h1>ORIZIN Paon</h1>
+                    <button id="start_button">START</button>
+                    <button id="menu_button">MENU</button>
+                </div>
+                <div id="menu_page">
+                    <h1><span class="back">←</span>MENU</h1>
+                    <button id="setting_button">設定</button>
+                    <button id="oss_licence_button">OSSライセンス</button>
+                    <button id="about_this_game_button">このゲームについて</button>
+                </div>
+                <div id="setting_page">
+                    <h1><span class="back">←</span>設定</h1>
+                    BGMを使用する<input type="checkbox" class="toggle" id="toggle_bgm_setting" checked>
+                </div>
+                <div id="oss_licence_page">
+                    <h1><span class="back">←</span>OSSライセンス</h1>
+                    <span>本ソフトウェアでは，以下のオープンソースソフトウェア（OSS）を使用しています。OSSの名前をクリックするとライセンスが表示されます。</span>
+                    <details>
+                        <summary>
+                            PixelMplus（ピクセル・エムプラス）
+                        </summary>
 <pre>
 PixelMplus（ピクセル・エムプラス）
 =================================
@@ -79,10 +81,10 @@ mplus_bitmap_fonts/LICENSE_E
 -- 
 Itou Hiroki &lt;itouhiro at users dot sourceforge dot jp&gt;
 </pre>
-                </details>
-                <details>
-                    <summary>ORIZIN Agent HTML</summary>
-<pre>
+                    </details>
+                    <details>
+                        <summary>ORIZIN Agent HTML</summary>
+    <pre>
 MIT License
 
 Copyright (c) 2019 - 2020 Robot-Inventor
@@ -104,19 +106,26 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-</pre>
-                </details>
+    </pre>
+                    </details>
+                </div>
+                <div id="about_this_game_page">
+                    <h1><span class="back">←</span>このゲームについて</h1>
+                    このゲームはRobot-Inventorによって作られ，MITライセンスの下に配布されており，誰でも自由に無料で利用することができます。また，本ゲームは，くそいサイト様のゲーム「ぴえん」に触発されていますが，直接の関係はありません。ご注意ください。
+                </div>
+                <div id="ask_about_tutorial_page">
+                    <h1><span class="back">←</span>チュートリアル</h1>
+                    <button>チュートリアルへ</button>
+                    <button>チュートリアルをスキップ</button>
+                </div>
             </div>
-            <div id="about_this_game_page">
-                <h1><span class="back">←</span>このゲームについて</h1>
-                このゲームはRobot-Inventorによって作られ，MITライセンスの下に配布されており，誰でも自由に無料で利用することができます。また，本ゲームは，くそいサイト様のゲーム「ぴえん」に触発されていますが，直接の関係はありません。ご注意ください。
-            </div>
+            <div id="copyright">Copyright (c) 2020 Robot-Inventor</div>
+            <div class="cloud" style="top: 10vh; animation-delay: 0s;"></div>
+            <div class="cloud" style="top: 20vh; animation-delay: -3s;"></div>
+            <div class="cloud" style="top: 50vh; animation-delay: -7s;"></div>
+            <div class="cloud" style="top: 80vh; animation-delay: -9s;"></div>
         </div>
-        <div id="copyright">Copyright (c) 2020 Robot-Inventor</div>
-        <div class="cloud" style="top: 10vh; animation-delay: 0s;"></div>
-        <div class="cloud" style="top: 20vh; animation-delay: -3s;"></div>
-        <div class="cloud" style="top: 50vh; animation-delay: -7s;"></div>
-        <div class="cloud" style="top: 80vh; animation-delay: -9s;"></div>
+        <div id="end_credit"></div>
     </body>
     <style>
         :root {
@@ -150,7 +159,7 @@ SOFTWARE.
             overflow: hidden;
         }
 
-        #menu_outer {
+        #top_page #menu_outer {
             width: 80vmin;
             height: 80vmin;
             position: absolute;
@@ -166,35 +175,55 @@ SOFTWARE.
             overflow: scroll;
         }
 
-        *::-webkit-scrollbar {
+        #top_page #menu_outer::-webkit-scrollbar {
             display: block;
             width: 0.2rem;
             transition: 0.3s;
         }
 
-        *::-webkit-scrollbar {
+        #top_page #menu_outer::-webkit-scrollbar {
             width: 0.2rem;
         }
 
-        *::-webkit-scrollbar-thumb {
+        #top_page #menu_outer::-webkit-scrollbar-thumb {
             background: none;
             border-radius: 0.2rem;
         }
 
-        *::-webkit-scrollbar-thumb {
+        #top_page #menu_outer::-webkit-scrollbar-thumb {
             background: white;
         }
 
-        *::-webkit-scrollbar-corner {
+        #top_page #menu_outer::-webkit-scrollbar-corner {
             display: none;
         }
 
-        #menu_outer #press_any_keys_page h1 {
+        #top_page #menu_outer #press_any_keys_page h1 {
             padding-top: 50%;
             transform: translateY(-50%);
         }
 
-        #menu_outer #title_page h1 {
+        #press_any_keys_page {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #top_page #overlay {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: transparent;
+            z-index: 2;
+        }
+
+        #top_page #menu_outer #title_page h1 {
             font-size: 10vmin;
             margin-top: 17.5vmin;
             text-align: center;
@@ -202,7 +231,7 @@ SOFTWARE.
             letter-spacing: 0em;
         }
 
-        #menu_outer div button {
+        #top_page #menu_outer div button {
             display: block;
             font-size: 5vmin;
             margin-top: 1em;
@@ -221,18 +250,18 @@ SOFTWARE.
             letter-spacing: 0em;
         }
 
-        #menu_outer div button:hover {
+        #top_page #menu_outer div button:hover {
             background: white;
             color: rgb(22, 161, 216);
             animation: none;
             transform: translate(0.1rem, 0.1rem);
         }
 
-        #menu_outer div:not(#press_any_keys_page) {
+        #top_page #menu_outer div:not(#press_any_keys_page) {
             display: none;
         }
 
-        #menu_outer div:not(#title_page) h1 {
+        #top_page #menu_outer div:not(#title_page) h1 {
             font-size: 7.5vmin;
             margin: 2rem 0;
             position: relative;
@@ -242,7 +271,7 @@ SOFTWARE.
             letter-spacing: 0em;
         }
 
-        #menu_outer div:not(#title_page) h1 .back {
+        #top_page #menu_outer div:not(#title_page) h1 .back {
             font-size: 7.5vmin;
             margin-top: 2rem;
             position: absolute;
@@ -364,11 +393,23 @@ SOFTWARE.
         .toggle:checked+label::before {
             margin-left: calc(100% - var(--toggle_height));
         }
+
+        #end_credit {
+            display: none;
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            position: fixed;
+        }
     </style>
     <script>
         const CHANGE_PAGE_TRANSITION_TIME = 100;
-        const main_music = new Audio("audio/物語の始まり.mp3");
+        const main_music_list = ["audio/物語の始まり.mp3", "audio/8bit_Game_Menu.mp3"]
+        let main_music_num = Math.floor(Math.random() * Math.floor(main_music_list.length));
+        let main_music = new Audio(main_music_list[main_music_num]);
         let main_music_play_status = true;
+        let is_any_keys_pressed_or_clicked = false;
 
         function hide_page(element, transition_time=100) {
             const element_style = document.querySelector(element).style;
@@ -417,57 +458,90 @@ SOFTWARE.
 
         toggle_switch_component();
 
-        document.addEventListener("keydown", function() {
-            change_page("#menu_outer #press_any_keys_page", "#menu_outer #title_page");
+        function play_main_music() {
+            main_music.pause();
+            main_music.currentTime = 0;
             main_music.play();
             main_music.addEventListener("ended", function() {
-                main_music.currentTime = 0;
-                main_music.play();
+                main_music_num += 1;
+                if (main_music_num > main_music_list.length - 1) {
+                    main_music_num = 0;
+                }
+                main_music = new Audio(main_music_list[main_music_num]);
+                play_main_music();
             });
+        }
+
+        function main_music_start() {
+            document.getElementById("overlay").style.display = "none";
+            change_page("#top_page #menu_outer #press_any_keys_page", "#top_page #menu_outer #title_page");
+            play_main_music();
+        }
+
+        document.addEventListener("keydown", function() {
+            if (!is_any_keys_pressed_or_clicked) {
+                main_music_start();
+                is_any_keys_pressed_or_clicked = true;
+            }
+        });
+
+        document.getElementById("overlay").addEventListener("click", function() {
+            if (!is_any_keys_pressed_or_clicked) {
+                main_music_start();
+                is_any_keys_pressed_or_clicked = true;
+            }
         });
 
         document.getElementById("toggle_bgm_setting").addEventListener("change", function() {
             if (document.getElementById("toggle_bgm_setting").checked) {
-                if (!main_music_play_status) {
-                    main_music.play();
-                    main_music_play_status = true;
-                }
+                main_music.play();
             } else {
                 main_music.pause();
-                main_music_play_status = false;
             }
         });
 
-        document.querySelector("#menu_outer #title_page #menu_button").addEventListener("click", function() {
-            change_page("#menu_outer #title_page", "#menu_outer #menu_page", CHANGE_PAGE_TRANSITION_TIME);
+        document.querySelector("#top_page #menu_outer #title_page #menu_button").addEventListener("click", function() {
+            change_page("#top_page #menu_outer #title_page", "#top_page #menu_outer #menu_page", CHANGE_PAGE_TRANSITION_TIME);
         });
 
-        document.querySelector("#menu_outer #menu_page .back").addEventListener("click", function() {
-            change_page("#menu_outer #menu_page", "#menu_outer #title_page", CHANGE_PAGE_TRANSITION_TIME);
+        document.querySelector("#top_page #menu_outer #menu_page .back").addEventListener("click", function() {
+            change_page("#top_page #menu_outer #menu_page", "#top_page #menu_outer #title_page", CHANGE_PAGE_TRANSITION_TIME);
         });
 
-        document.querySelector("#menu_outer #menu_page #setting_button").addEventListener("click", function() {
-            change_page("#menu_outer #menu_page", "#menu_outer #setting_page", CHANGE_PAGE_TRANSITION_TIME);
+        document.querySelector("#top_page #menu_outer #menu_page #setting_button").addEventListener("click", function() {
+            change_page("#top_page #menu_outer #menu_page", "#top_page #menu_outer #setting_page", CHANGE_PAGE_TRANSITION_TIME);
         });
 
-        document.querySelector("#menu_outer #setting_page .back").addEventListener("click", function() {
-            change_page("#menu_outer #setting_page", "#menu_outer #menu_page", CHANGE_PAGE_TRANSITION_TIME);
+        document.querySelector("#top_page #menu_outer #setting_page .back").addEventListener("click", function() {
+            change_page("#top_page #menu_outer #setting_page", "#top_page #menu_outer #menu_page", CHANGE_PAGE_TRANSITION_TIME);
         });
 
-        document.querySelector("#menu_outer #menu_page #oss_licence_button").addEventListener("click", function() {
-            change_page("#menu_outer #menu_page", "#menu_outer #oss_licence_page", CHANGE_PAGE_TRANSITION_TIME);
+        document.querySelector("#top_page #menu_outer #menu_page #oss_licence_button").addEventListener("click", function() {
+            change_page("#top_page #menu_outer #menu_page", "#top_page #menu_outer #oss_licence_page", CHANGE_PAGE_TRANSITION_TIME);
         });
 
-        document.querySelector("#menu_outer #oss_licence_page .back").addEventListener("click", function() {
-            change_page("#menu_outer #oss_licence_page", "#menu_outer #menu_page", CHANGE_PAGE_TRANSITION_TIME);
+        document.querySelector("#top_page #menu_outer #oss_licence_page .back").addEventListener("click", function() {
+            change_page("#top_page #menu_outer #oss_licence_page", "#top_page #menu_outer #menu_page", CHANGE_PAGE_TRANSITION_TIME);
         });
 
-        document.querySelector("#menu_outer #menu_page #about_this_game_button").addEventListener("click", function() {
-            change_page("#menu_outer #menu_page", "#menu_outer #about_this_game_page", CHANGE_PAGE_TRANSITION_TIME);
+        document.querySelector("#top_page #menu_outer #menu_page #about_this_game_button").addEventListener("click", function() {
+            change_page("#top_page #menu_outer #menu_page", "#top_page #menu_outer #about_this_game_page", CHANGE_PAGE_TRANSITION_TIME);
         });
 
-        document.querySelector("#menu_outer #about_this_game_page .back").addEventListener("click", function() {
-            change_page("#menu_outer #about_this_game_page", "#menu_outer #menu_page", CHANGE_PAGE_TRANSITION_TIME);
+        document.querySelector("#top_page #menu_outer #about_this_game_page .back").addEventListener("click", function() {
+            change_page("#top_page #menu_outer #about_this_game_page", "#top_page #menu_outer #menu_page", CHANGE_PAGE_TRANSITION_TIME);
         });
+
+        document.querySelector("#top_page #menu_outer #title_page #start_button").addEventListener("click", function() {
+            change_page("#top_page #menu_outer #title_page", "#top_page #menu_outer #ask_about_tutorial_page", CHANGE_PAGE_TRANSITION_TIME);
+        });
+
+        document.querySelector("#top_page #menu_outer #ask_about_tutorial_page .back").addEventListener("click", function() {
+            change_page("#top_page #menu_outer #ask_about_tutorial_page", "#top_page #menu_outer #title_page", CHANGE_PAGE_TRANSITION_TIME);
+        });
+
+        function show_end_credit() {
+            document.getElementById("end_credit").style.display = "block";
+        }
     </script>
 </html>

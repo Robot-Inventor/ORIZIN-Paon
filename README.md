@@ -6,6 +6,8 @@
 ## セットアップ
 フリー音源のサイトのDOVA-SYNDROMEで公開されている[物語の始まり](https://dova-s.jp/bgm/play3915.html)（無料）をダウンロードし，audioフォルダーの中に「物語の始まり.mp3」として保存します。
 
+また，同様に[8bit Game Menu](https://dova-s.jp/bgm/play1444.html)（無料）をダウンロードし，audioフォルダーの中に「8bit_Game_Menu.mp3」として保存します。
+
 それが終わったら，index.htmlをGoogle Chromeで開きます。
 
 ## Q&A
