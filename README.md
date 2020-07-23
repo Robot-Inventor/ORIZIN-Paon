@@ -4,9 +4,13 @@
 注意：本ゲームは，くそいサイト様のホラーゲーム「ぴえん」に触発されましたが，直接関係はありません。制作者も別の人間です。
 
 ## セットアップ
-フリー音源のサイトのDOVA-SYNDROMEで公開されている[物語の始まり](https://dova-s.jp/bgm/play3915.html)（無料）をダウンロードし，audioフォルダーの中に「物語の始まり.mp3」として保存します。
+フリー音源のサイトのDOVA-SYNDROMEで公開されている以下の無料の音源をダウンロードします。それぞれのリンク先からダウンロードし，下の表で指定されているファイル名で**本ソフトウェアのaudioフォルダーの中に**保存してください。
 
-また，同様に[8bit Game Menu](https://dova-s.jp/bgm/play1444.html)（無料）をダウンロードし，audioフォルダーの中に「8bit_Game_Menu.mp3」として保存します。
+|リンク|ファイル名|
+|--:--|--:--|
+|[物語の始まり](https://dova-s.jp/bgm/play3915.html)|物語の始まり.mp3|
+|[8bit Game Menu](https://dova-s.jp/bgm/play1444.html)|8bit_Game_Menu.mp3|
+|[Tomorrow Land](https://dova-s.jp/bgm/play10839.html)|Tomorrow_Land.mp3|
 
 それが終わったら，index.htmlをGoogle Chromeで開きます。
 

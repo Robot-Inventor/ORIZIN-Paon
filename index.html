@@ -316,7 +316,7 @@ SOFTWARE.
             background: white;
             width: 10vmin;
             height: 5vmin;
-            position: absolute;
+            position: fixed;
             animation: cloud 10s linear 0s infinite normal;
             overflow: visible;
         }
@@ -472,25 +472,18 @@ SOFTWARE.
             });
         }
 
-        function main_music_start() {
-            document.getElementById("overlay").style.display = "none";
-            change_page("#top_page #menu_outer #press_any_keys_page", "#top_page #menu_outer #title_page");
-            play_main_music();
+        function show_title_page() {
+            if (!is_any_keys_pressed_or_clicked) {
+                document.getElementById("overlay").style.display = "none";
+                change_page("#top_page #menu_outer #press_any_keys_page", "#top_page #menu_outer #title_page");
+                play_main_music();
+                is_any_keys_pressed_or_clicked = true;
+            }
         }
 
-        document.addEventListener("keydown", function() {
-            if (!is_any_keys_pressed_or_clicked) {
-                main_music_start();
-                is_any_keys_pressed_or_clicked = true;
-            }
-        });
+        document.addEventListener("keydown", show_title_page);
 
-        document.getElementById("overlay").addEventListener("click", function() {
-            if (!is_any_keys_pressed_or_clicked) {
-                main_music_start();
-                is_any_keys_pressed_or_clicked = true;
-            }
-        });
+        document.getElementById("overlay").addEventListener("click", show_title_page);
 
         document.getElementById("toggle_bgm_setting").addEventListener("change", function() {
             if (document.getElementById("toggle_bgm_setting").checked) {
