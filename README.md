@@ -9,7 +9,6 @@
 |リンク|ファイル名|
 |--:--|--:--|
 |[物語の始まり](https://dova-s.jp/bgm/play3915.html)|物語の始まり.mp3|
-|[8bit Game Menu](https://dova-s.jp/bgm/play1444.html)|8bit_Game_Menu.mp3|
 |[Tomorrow Land](https://dova-s.jp/bgm/play10839.html)|Tomorrow_Land.mp3|
 
 それが終わったら，index.htmlをGoogle Chromeで開きます。
