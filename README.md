@@ -1,4 +1,6 @@
 # ORIZIN PAON
+[![deepcode](https://www.deepcode.ai/api/gh/badge?key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwbGF0Zm9ybTEiOiJnaCIsIm93bmVyMSI6IlJvYm90LUludmVudG9yIiwicmVwbzEiOiJPUklaSU4tUGFvbiIsImluY2x1ZGVMaW50IjpmYWxzZSwiYXV0aG9ySWQiOjE5NTA0LCJpYXQiOjE1OTYxODQwNDF9.FSWSh5po0ZOcCQbpd3dwLIHoUFHeYn2FHnJLfBeEGWY)](https://www.deepcode.ai/app/gh/Robot-Inventor/ORIZIN-Paon/_/dashboard?utm_content=gh%2FRobot-Inventor%2FORIZIN-Paon)
+
 ホラーゲームの「ぴえん」に触発されたWebGLを使用したオープンソースのホラーゲーム（？）。MITライセンスの下に公開されており，誰でも無料で自由に利用できます。
 
 注意：本ゲームは，くそいサイト様のホラーゲーム「ぴえん」に触発されましたが，直接関係はありません。制作者も別の人間です。
