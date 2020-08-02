@@ -9,7 +9,7 @@
 フリー音源のサイトのDOVA-SYNDROMEで公開されている以下の無料の音源をダウンロードします。それぞれのリンク先からダウンロードし，下の表で指定されているファイル名で**本ソフトウェアのaudioフォルダーの中に**保存してください。
 
 |リンク|ファイル名|
-|--:--|--:--|
+|:---|:---|
 |[物語の始まり](https://dova-s.jp/bgm/play3915.html)|物語の始まり.mp3|
 |[Tomorrow Land](https://dova-s.jp/bgm/play10839.html)|Tomorrow_Land.mp3|
 
