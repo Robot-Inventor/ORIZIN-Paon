@@ -13,7 +13,9 @@
 |[物語の始まり](https://dova-s.jp/bgm/play3915.html)|物語の始まり.mp3|
 |[Tomorrow Land](https://dova-s.jp/bgm/play10839.html)|Tomorrow_Land.mp3|
 
-それが終わったら，index.htmlをGoogle Chromeで開きます。
+それが終わったらローカルサーバーを立ち上げ，index.htmlをGoogle Chromeで開きます。
+
+注）現在，Google Chromeの仕様上，このゲームはローカルサーバーを立ち上げなければ使用できません。ローカルサーバーであれば何でも良いですが，誰でも簡単に使用できるようにするため現在ローカルサーバーなしでゲームをプレイできるようにする方法を検討中です。
 
 ## Q&A
 ### なぜ，自分でBGMをダウンロードしなければいけないのですか？
