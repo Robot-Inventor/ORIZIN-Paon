@@ -366,8 +366,11 @@ limitations under the License.
             <div class="cloud" style="top: 80vh; animation-delay: -9s;"></div>
         </div>
         <canvas id="game_canvas"></canvas>
-        <div id="end_credit"></div>
+        <div id="pointer_controls_menu">
+            <p>Clickしろ！</p>
+        </div>
         <div id="fullscreen_button" title="全画面表示の切り替え（F11またはCommand + Control + F）"><i class="material_icon">fullscreen</i></div>
+
     </body>
     <style>
         :root {
@@ -723,9 +726,26 @@ limitations under the License.
             transform: translateY(-0.2rem);
             cursor: pointer;
         }
+
+        #pointer_controls_menu {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: rgba(100, 100, 100, 0.5);
+            color: white;
+            display: none;
+            z-index: 2;
+            cursor: pointer;
+        }
     </style>
     <script src="javascript/three.min.js"></script>
-    <script src="javascript/OrbitControls.js"></script>
+    <!-- <script src="javascript/OrbitControls.js"></script> -->
+    <script src="javascript/PointerLockControls.js"></script>
+    <!-- <script src="javascript/FirstPersonControls.js"></script> -->
     <script src="javascript/GLTFLoader.js"></script>
     <script>
         const CHANGE_PAGE_TRANSITION_TIME = 100;
@@ -910,9 +930,11 @@ limitations under the License.
                 renderer.setSize(canvas_width, canvas_height);
                 camera.aspect = canvas_width / canvas_height;
                 camera.updateProjectionMatrix();
+                // controls.handleResize();
             }
 
             window.addEventListener("resize", resize_canvas);
+            document.getElementById("pointer_controls_menu").style.display = "block";
             const canvas_width = innerWidth;
             const canvas_height = innerHeight;
             const renderer = new THREE.WebGLRenderer({
@@ -928,15 +950,24 @@ limitations under the License.
                 10000
             );
             camera.position.set(0, 0, 5);
-            const controls = new THREE.OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.2;
-            // const geometry = new THREE.BoxGeometry(500, 500, 500);
-            // const material = new THREE.MeshStandardMaterial({
-            //     color: 0x0000ff
-            // });
-            // const box = new THREE.Mesh(geometry, material);
-            // scene.add(box);
+            // const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            // controls.enableDamping = true;
+            // controls.dampingFactor = 0.2;
+            // const fps_controls = new THREE.FirstPersonControls(camera, document.getElementById("game_canvas"));
+            // fps_controls.lookSpeed = 0.2;
+            // fps_controls.movementSpeed = 5;
+            // fps_controls.lookVertical = false;
+            const pointer_controls = new THREE.PointerLockControls(camera, document.getElementById("game_canvas"));
+            document.getElementById("pointer_controls_menu").addEventListener("click", function() {
+                pointer_controls.lock();
+            });
+            pointer_controls.addEventListener("lock", function() {
+                document.getElementById("pointer_controls_menu").style.display = "none";
+            });
+            pointer_controls.addEventListener("unlock", function() {
+                document.getElementById("pointer_controls_menu").style.display = "block";
+            });
+            const clock = new THREE.Clock(true);
             const directionalLight = new THREE.DirectionalLight(
                 0xffffff
             );
@@ -944,9 +975,6 @@ limitations under the License.
             scene.add(directionalLight);
             const loader = new THREE.GLTFLoader();
             loader.load("3dmodel/Elephant 3.glb", (gltf) => {
-                // const gltf = data;
-                // const object = gltf.scene;
-                // scene.add(object);
                 scene.add(gltf.scene);
                 gltf.animations;
                 gltf.scene;
@@ -959,9 +987,8 @@ limitations under the License.
             loop();
 
             function loop() {
-                controls.update();
-                // box.rotation.x += 0.01;
-                // box.rotation.y += 0.01;
+                // controls.update();
+                // fps_controls.update(clock.getDelta());
                 renderer.render(scene, camera);
                 requestAnimationFrame(loop);
             }
