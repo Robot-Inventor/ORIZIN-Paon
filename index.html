@@ -781,13 +781,20 @@ THE SOFTWARE.
     <script src="javascript/GLTFLoader.js"></script>
     <script>
         const CHANGE_PAGE_TRANSITION_TIME = 100;
-        let main_music = new Audio("audio/物語の始まり.mp3");
+        let main_music = new Audio();
+        load_audio_data("audio/物語の始まり.mp3.base64", main_music);
         let main_music_play_status = true;
         let is_any_keys_pressed_or_clicked = false;
 
         const stats = new Stats();
         stats.showPanel(0);
         document.body.appendChild(stats.dom);
+
+        async function load_audio_data(audio_file_path, audio_element) {
+            const response = await fetch(audio_file_path);
+            const text = await response.text();
+            audio_element.src = "data:audio/mpeg;base64," + text;
+        }
 
         function hide_page(element, transition_time=100) {
             const element_style = document.querySelector(element).style;
