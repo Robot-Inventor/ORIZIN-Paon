@@ -745,7 +745,7 @@ limitations under the License.
     <script src="javascript/three.min.js"></script>
     <!-- <script src="javascript/OrbitControls.js"></script> -->
     <script src="javascript/PointerLockControls.js"></script>
-    <!-- <script src="javascript/FirstPersonControls.js"></script> -->
+    <script src="javascript/FirstPersonControls.js"></script>
     <script src="javascript/GLTFLoader.js"></script>
     <script>
         const CHANGE_PAGE_TRANSITION_TIME = 100;
@@ -967,7 +967,58 @@ limitations under the License.
             pointer_controls.addEventListener("unlock", function() {
                 document.getElementById("pointer_controls_menu").style.display = "block";
             });
-            const clock = new THREE.Clock(true);
+            let is_move_forward_mode = false;
+            let is_move_back_mode = false;
+            let is_move_left_mode = false;
+            let is_move_right_mode = false;
+            setInterval(function() {
+                const move_distance = 0.1;
+                if(is_move_forward_mode) {
+                    pointer_controls.moveForward(move_distance);
+                }
+                if(is_move_back_mode) {
+                    pointer_controls.moveForward(-1 * move_distance);
+                }
+                if(is_move_right_mode) {
+                    pointer_controls.moveRight(move_distance);
+                }
+                if(is_move_left_mode) {
+                    pointer_controls.moveRight(-1 * move_distance);
+                }
+            }, 1000 / 60);
+            document.addEventListener("keydown", function() {
+                switch(event.keyCode) {
+                    case 87:
+                        is_move_forward_mode = true;
+                        break;
+                    case 83:
+                        is_move_back_mode = true;
+                        break;
+                    case 68:
+                        is_move_right_mode = true;
+                        break;
+                    case 65:
+                        is_move_left_mode = true;
+                        break;
+                }
+            });
+            document.addEventListener("keyup", function() {
+                switch(event.keyCode) {
+                    case 87:
+                        is_move_forward_mode = false;
+                        break;
+                    case 83:
+                        is_move_back_mode = false;
+                        break;
+                    case 68:
+                        is_move_right_mode = false;
+                        break;
+                    case 65:
+                        is_move_left_mode = false;
+                        break;
+                }
+            });
+            // const clock = new THREE.Clock(true);
             const directionalLight = new THREE.DirectionalLight(
                 0xffffff
             );
