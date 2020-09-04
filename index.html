@@ -984,11 +984,12 @@ THE SOFTWARE.
                 // controls.handleResize();
             }
 
-            function horror_music_player() {
+            function play_horror_music() {
                 const horror_music = new Audio();
                 load_audio_data("audio/本当に有った怖い話.mp3.base64", horror_music);
                 function player() {
                     horror_music.currentTime = 0;
+                    horror_music.volume = 0.5;
                     horror_music.play();
                 }
                 player();
@@ -996,7 +997,32 @@ THE SOFTWARE.
                     player();
                 });
             }
-            horror_music_player();
+            play_horror_music();
+
+            function random_timing_player(file_path) {
+                const roar = new Audio();
+                load_audio_data(file_path, roar);
+                function player() {
+                    console.log(file_path + "   start");
+                    roar.currentTime = 0;
+                    roar.play();
+                }
+                function generate_random() {
+                    const MIN = Math.ceil(30);
+                    const MAX = Math.floor(60);
+                    return Math.floor((Math.random() * (MAX - MIN) + MAX) * 1000);
+                }
+                setTimeout(function() {
+                    player();
+                }, generate_random());
+                roar.addEventListener("ended", function() {
+                    setTimeout(function() {
+                        player();
+                    }, generate_random());
+                });;
+            }
+            random_timing_player("audio/ゾンビ・モンスターの唸り声.mp3.base64");
+            random_timing_player("audio/お食事モンスター.mp3.base64")
 
             window.addEventListener("resize", resize_canvas);
             document.getElementById("pointer_controls_menu").style.display = "block";
