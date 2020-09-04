@@ -984,6 +984,20 @@ THE SOFTWARE.
                 // controls.handleResize();
             }
 
+            function horror_music_player() {
+                const horror_music = new Audio();
+                load_audio_data("audio/本当に有った怖い話.mp3.base64", horror_music);
+                function player() {
+                    horror_music.currentTime = 0;
+                    horror_music.play();
+                }
+                player();
+                horror_music.addEventListener("ended", function() {
+                    player();
+                });
+            }
+            horror_music_player();
+
             window.addEventListener("resize", resize_canvas);
             document.getElementById("pointer_controls_menu").style.display = "block";
             const canvas_width = innerWidth;
