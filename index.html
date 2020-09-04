@@ -793,7 +793,7 @@ THE SOFTWARE.
         async function load_audio_data(audio_file_path, audio_element) {
             const response = await fetch(audio_file_path);
             const text = await response.text();
-            audio_element.src = "data:audio/mpeg;base64," + text;
+            audio_element.src = "data:audio/mpeg;base64," + text.replace(/<0x41>/g, "A").replace(/<a>/g, "z");
         }
 
         function hide_page(element, transition_time=100) {
