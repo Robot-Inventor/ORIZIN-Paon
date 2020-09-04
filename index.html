@@ -1022,21 +1022,6 @@ THE SOFTWARE.
             let is_move_back_mode = false;
             let is_move_left_mode = false;
             let is_move_right_mode = false;
-            setInterval(function() {
-                const move_distance = 0.1;
-                if(is_move_forward_mode) {
-                    pointer_controls.moveForward(move_distance);
-                }
-                if(is_move_back_mode) {
-                    pointer_controls.moveForward(-1 * move_distance);
-                }
-                if(is_move_right_mode) {
-                    pointer_controls.moveRight(move_distance);
-                }
-                if(is_move_left_mode) {
-                    pointer_controls.moveRight(-1 * move_distance);
-                }
-            }, 1000 / 60);
             document.addEventListener("keydown", function() {
                 switch(event.keyCode) {
                     case 87:
@@ -1092,7 +1077,23 @@ THE SOFTWARE.
                 // controls.update();
                 // fps_controls.update(clock.getDelta());
                 stats.begin();
+
+                const move_distance = 0.1;
+                if(is_move_forward_mode) {
+                    pointer_controls.moveForward(move_distance);
+                }
+                if(is_move_back_mode) {
+                    pointer_controls.moveForward(-1 * move_distance);
+                }
+                if(is_move_right_mode) {
+                    pointer_controls.moveRight(move_distance);
+                }
+                if(is_move_left_mode) {
+                    pointer_controls.moveRight(-1 * move_distance);
+                }
+
                 renderer.render(scene, camera);
+
                 stats.end();
                 requestAnimationFrame(loop);
             }
