@@ -396,8 +396,8 @@ THE SOFTWARE.
         <div id="pointer_controls_menu">
             <p>Clickしろ！</p>
         </div>
+        <!-- <textarea id="hoge" cols="30" rows="10" style="z-index: 1000;margin: 0;padding: 0;width: 50vw;height: 50vh;color: black;position: fixed;top: 0;left: 0;"></textarea> -->
         <div id="fullscreen_button" title="全画面表示の切り替え（F11またはCommand + Control + F）"><i class="material_icon">fullscreen</i></div>
-
     </body>
     <style>
         :root {
@@ -796,6 +796,76 @@ THE SOFTWARE.
             audio_element.src = "data:audio/mpeg;base64," + text.replace(/<0x41>/g, "A").replace(/<a>/g, "z");
         }
 
+        // async function key_generater() {
+        //     const key = await crypto.subtle.generateKey(
+        //         {
+        //             name: "AES-GCM",
+        //             length: 256
+        //         },
+        //         true,
+        //         ["encrypt", "decrypt"]
+        //     );
+        //     const exported = await window.crypto.subtle.exportKey(
+        //         "jwk",
+        //         key
+        //     );
+        //     document.getElementById("hoge").value = JSON.stringify(exported);
+        // }
+        // key_generater();
+
+        // async function encrypter() {
+        //     const jwk_data = '{"alg":"A256GCM","ext":true,"k":"WPnYrAtUepgQIjieZnVsakQPBpfXHX2aoQbcFgMq-1c","key_ops":["encrypt","decrypt"],"kty":"oct"}';
+        //     const encoder = new TextEncoder();
+        //     const decoder = new TextDecoder();
+        //     const key = await crypto.subtle.importKey(
+        //         "jwk",
+        //         JSON.parse(jwk_data),
+        //         "AES-GCM",
+        //         false,
+        //         ["encrypt", "decrypt"]
+        //     );
+        //     // const response = await fetch("audio/物語の始まり.mp3.base64");
+        //     // const text = await response.text();
+        //     const text = "hoge";
+        //     const encoded = encoder.encode(text);
+        //     const iv = encoder.encode(atob("kXNUZG5x+0xsm4xv"));
+        //     const result = await crypto.subtle.encrypt(
+        //         {
+        //             name: "AES-GCM",
+        //             iv: iv
+        //         },
+        //         key,
+        //         encoded
+        //     );
+        //     document.getElementById("hoge").value = String.fromCharCode.apply(null, new Uint8Array(result));
+        // }
+        // encrypter();
+
+//         async function decrypter() {
+//             const encoder = new TextEncoder();
+//             const iv = encoder.encode(atob("kXNUZG5x+0xsm4xv"));
+//             const jwk_data = '{"alg":"A256GCM","ext":true,"k":"WPnYrAtUepgQIjieZnVsakQPBpfXHX2aoQbcFgMq-1c","key_ops":["encrypt","decrypt"],"kty":"oct"}';
+//             const key = await crypto.subtle.importKey(
+//                 "jwk",
+//                 JSON.parse(jwk_data),
+//                 "AES-GCM",
+//                 false,
+//                 ["encrypt", "decrypt"]
+//             );
+//             const encoded = encoder.encode(`¢ºö½È2\)ó´x.Î
+// `);
+//             const result = await crypto.subtle.decrypt(
+//                 {
+//                     name: "AES-GCM",
+//                     iv: iv
+//                 },
+//                 key,
+//                 encoded
+//             );
+//             console.log(result)
+//         }
+//         decrypter();
+
         function hide_page(element, transition_time=100) {
             const element_style = document.querySelector(element).style;
             element_style.transition = transition_time + "ms";
@@ -1003,7 +1073,6 @@ THE SOFTWARE.
                 const roar = new Audio();
                 load_audio_data(file_path, roar);
                 function player() {
-                    console.log(file_path + "   start");
                     roar.currentTime = 0;
                     roar.play();
                 }
@@ -1100,6 +1169,8 @@ THE SOFTWARE.
             );
             directionalLight.position.set(1, 1, 1);
             scene.add(directionalLight);
+            const raycaster = new THREE.Raycaster();
+            // raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
             const loader = new THREE.GLTFLoader();
             loader.load("3dmodel/Elephant 3.glb", (gltf) => {
                 scene.add(gltf.scene);
@@ -1117,6 +1188,18 @@ THE SOFTWARE.
                 // controls.update();
                 // fps_controls.update(clock.getDelta());
                 stats.begin();
+
+                raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+                // raycaster.set(camera.position, new THREE.Vector3(0, 0, -1));
+                const intersects = raycaster.intersectObjects(scene.children, true);
+
+                if(intersects.length > 0){
+                    for(let i = 0; i < intersects.length; i++) {
+                        if(intersects[i].distance < 3) {
+                            is_move_forward_mode = false;
+                        }
+                    }
+                }
 
                 const move_distance = 0.1;
                 if(is_move_forward_mode) {
