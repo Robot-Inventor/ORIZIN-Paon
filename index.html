@@ -1109,7 +1109,7 @@ THE SOFTWARE.
                 1,
                 10000
             );
-            camera.position.set(0, 0, 5);
+            camera.position.set(0, 2, 5);
             // const controls = new THREE.OrbitControls(camera, renderer.domElement);
             // controls.enableDamping = true;
             // controls.dampingFactor = 0.2;
@@ -1171,8 +1171,18 @@ THE SOFTWARE.
             scene.add(directionalLight);
             const raycaster = new THREE.Raycaster();
             // raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
-            const loader = new THREE.GLTFLoader();
-            loader.load("3dmodel/Elephant 3.glb", (gltf) => {
+            const elephant_loader = new THREE.GLTFLoader();
+            elephant_loader.load("3dmodel/Elephant 3.glb", (gltf) => {
+                gltf.scene.position.y += 2.8;
+                scene.add(gltf.scene);
+                gltf.animations;
+                gltf.scene;
+                gltf.scenes;
+                gltf.cameras;
+                gltf.asset;
+            });
+            const dojo_loader = new THREE.GLTFLoader();
+            dojo_loader.load("3dmodel/DOJO 1_LEE ROSARIO.glb", (gltf) => {
                 scene.add(gltf.scene);
                 gltf.animations;
                 gltf.scene;
@@ -1195,8 +1205,9 @@ THE SOFTWARE.
 
                 if(intersects.length > 0){
                     for(let i = 0; i < intersects.length; i++) {
-                        if(intersects[i].distance < 3) {
+                        if(intersects[i].distance < 2) {
                             is_move_forward_mode = false;
+                            pointer_controls.moveForward(intersects[i].distance - 1.9);
                         }
                     }
                 }
