@@ -1093,7 +1093,9 @@ THE SOFTWARE.
             random_timing_player("audio/お食事モンスター.mp3.base64")
 
             window.addEventListener("resize", resize_canvas);
+
             document.getElementById("pointer_controls_menu").style.display = "block";
+
             const canvas_width = innerWidth;
             const canvas_height = innerHeight;
             const renderer = new THREE.WebGLRenderer({
@@ -1101,6 +1103,7 @@ THE SOFTWARE.
             });
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.setSize(canvas_width, canvas_height);
+
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(
                 45,
@@ -1116,6 +1119,7 @@ THE SOFTWARE.
             // fps_controls.lookSpeed = 0.2;
             // fps_controls.movementSpeed = 5;
             // fps_controls.lookVertical = false;
+
             const pointer_controls = new THREE.PointerLockControls(camera, document.getElementById("game_canvas"));
             document.getElementById("pointer_controls_menu").addEventListener("click", function() {
                 pointer_controls.lock();
@@ -1126,6 +1130,7 @@ THE SOFTWARE.
             pointer_controls.addEventListener("unlock", function() {
                 document.getElementById("pointer_controls_menu").style.display = "block";
             });
+
             let is_move_forward_mode = false;
             let is_move_back_mode = false;
             let is_move_left_mode = false;
@@ -1163,13 +1168,8 @@ THE SOFTWARE.
                 }
             });
             // const clock = new THREE.Clock(true);
-            const directionalLight = new THREE.DirectionalLight(
-                0xffffff
-            );
-            directionalLight.position.set(1, 1, 1);
-            scene.add(directionalLight);
-            const raycaster = new THREE.Raycaster();
-            // raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
+            // raycaster_front.setFromCamera(new THREE.Vector2(0, 0), camera);
+
             const elephant_loader = new THREE.GLTFLoader();
             elephant_loader.load("3dmodel/Elephant 3.glb", (gltf) => {
                 gltf.scene.position.y += 2.8;
@@ -1180,8 +1180,8 @@ THE SOFTWARE.
                 gltf.cameras;
                 gltf.asset;
             });
-            const dojo_loader = new THREE.GLTFLoader();
-            dojo_loader.load("3dmodel/DOJO 1_LEE ROSARIO.glb", (gltf) => {
+            const hallway_loader = new THREE.GLTFLoader();
+            hallway_loader.load("3dmodel/original/hallway_with_light.glb", (gltf) => {
                 scene.add(gltf.scene);
                 gltf.animations;
                 gltf.scene;
@@ -1189,7 +1189,29 @@ THE SOFTWARE.
                 gltf.cameras;
                 gltf.asset;
             });
+
+            const light1 = new THREE.PointLight(0xFFFFFF, 5, 50, 1.0);
+            light1.position.y = 5.5;
+            scene.add(light1);
+            const light2 = light1.clone();
+            light2.position.z = 10;
+            scene.add(light2);
+            const light3 = light1.clone();
+            light3.position.z = -10;
+            scene.add(light3);
+
+            const raycaster_front = new THREE.Raycaster();
+            const raycaster_left = new THREE.Raycaster();
+            const raycaster_right = new THREE.Raycaster();
+            const raycaster_back = new THREE.Raycaster();
+            const camera_direction = new THREE.Vector3();
+            const camera_direction_copy = new THREE.Vector3();
+            const camera_direction_copy2 = new THREE.Vector3();
+            const axis = new THREE.Vector3(0, 1, 0);
+
+            renderer.physicallyCorrectLights = true;
             renderer.render(scene, camera);
+
             resize_canvas();
             loop();
 
@@ -1198,31 +1220,60 @@ THE SOFTWARE.
                 // fps_controls.update(clock.getDelta());
                 stats.begin();
 
-                raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
-                // raycaster.set(camera.position, new THREE.Vector3(0, 0, -1));
-                const intersects = raycaster.intersectObjects(scene.children, true);
-
-                if(intersects.length > 0){
-                    for(let i = 0; i < intersects.length; i++) {
-                        if(intersects[i].distance < 2) {
-                            is_move_forward_mode = false;
-                            pointer_controls.moveForward(intersects[i].distance - 1.9);
-                        }
+                raycaster_front.setFromCamera(new THREE.Vector2(0, 0), camera);
+                // raycaster_front.set(camera.position, new THREE.Vector3(0, 0, -1));
+                const intersects_front = raycaster_front.intersectObjects(scene.children, true);
+                if(intersects_front.length > 0) {
+                    if(intersects_front[0].distance < 2) {
+                        is_move_forward_mode = false;
+                        pointer_controls.moveForward(intersects_front[0].distance - 1.9);
                     }
                 }
 
-                const move_distance = 0.1;
+                camera.getWorldDirection(camera_direction);
+                camera.getWorldDirection(camera_direction_copy);
+                camera.getWorldDirection(camera_direction_copy2);
+                const camera_position = camera.position;
+
+                raycaster_right.set(camera_position, camera_direction.applyAxisAngle(axis, -1 * (Math.PI / 2)));
+                const intersects_right = raycaster_right.intersectObjects(scene.children, true);
+                if(intersects_right.length > 0) {
+                    if(intersects_right[0].distance < 1) {
+                        is_move_right_mode = false;
+                        pointer_controls.moveRight(intersects_right[0].distance - 0.9);
+                    }
+                }
+
+                raycaster_left.set(camera_position, camera_direction_copy.applyAxisAngle(axis, Math.PI / 2));
+                const intersects_left = raycaster_left.intersectObjects(scene.children, true);
+                if(intersects_left.length > 0) {
+                    if(intersects_left[0].distance < 1) {
+                        is_move_left_mode = false;
+                        pointer_controls.moveRight(-1 * (intersects_left[0].distance - 0.9));
+                    }
+                }
+
+                raycaster_back.set(camera_position, camera_direction_copy2.applyAxisAngle(axis, Math.PI));
+                const intersects_back = raycaster_back.intersectObjects(scene.children, true);
+                if(intersects_back.length > 0) {
+                    if(intersects_back[0].distance < 1) {
+                        is_move_back_mode = false;
+                        pointer_controls.moveForward(-1 * (intersects_back[0].distance - 0.9));
+                    }
+                }
+
+                const moving_distance = 0.1;
                 if(is_move_forward_mode) {
-                    pointer_controls.moveForward(move_distance);
+                    pointer_controls.moveForward(moving_distance);
                 }
                 if(is_move_back_mode) {
-                    pointer_controls.moveForward(-1 * move_distance);
+                    pointer_controls.moveForward(-1 * moving_distance);
                 }
                 if(is_move_right_mode) {
-                    pointer_controls.moveRight(move_distance);
+                    pointer_controls.moveRight(moving_distance);
                 }
                 if(is_move_left_mode) {
-                    pointer_controls.moveRight(-1 * move_distance);
+                    pointer_controls.moveRight(-1 * moving_distance);
                 }
 
                 renderer.render(scene, camera);
