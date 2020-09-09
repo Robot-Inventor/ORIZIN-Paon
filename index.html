@@ -1170,18 +1170,19 @@ THE SOFTWARE.
             // const clock = new THREE.Clock(true);
             // raycaster_front.setFromCamera(new THREE.Vector2(0, 0), camera);
 
-            const elephant_loader = new THREE.GLTFLoader();
-            elephant_loader.load("3dmodel/Elephant 3.glb", (gltf) => {
-                gltf.scene.position.y += 2.8;
-                scene.add(gltf.scene);
-                gltf.animations;
-                gltf.scene;
-                gltf.scenes;
-                gltf.cameras;
-                gltf.asset;
-            });
+            // const elephant_loader = new THREE.GLTFLoader();
+            // elephant_loader.load("3dmodel/Elephant 3.glb", (gltf) => {
+            //     gltf.scene.position.y += 2.8;
+            //     scene.add(gltf.scene);
+            //     gltf.animations;
+            //     gltf.scene;
+            //     gltf.scenes;
+            //     gltf.cameras;
+            //     gltf.asset;
+            // });
+
             const hallway_loader = new THREE.GLTFLoader();
-            hallway_loader.load("3dmodel/original/hallway_with_light.glb", (gltf) => {
+            hallway_loader.load("3dmodel/original/room_and_hallway.glb", (gltf) => {
                 scene.add(gltf.scene);
                 gltf.animations;
                 gltf.scene;
@@ -1190,7 +1191,7 @@ THE SOFTWARE.
                 gltf.asset;
             });
 
-            const light1 = new THREE.PointLight(0xFFFFFF, 5, 50, 1.0);
+            const light1 = new THREE.PointLight(0xFFFFFF, 1, 50, 1.0);
             light1.position.y = 5.5;
             scene.add(light1);
             const light2 = light1.clone();
@@ -1199,6 +1200,22 @@ THE SOFTWARE.
             const light3 = light1.clone();
             light3.position.z = -10;
             scene.add(light3);
+            const light4 = light1.clone();
+            light4.position.z = -19;
+            light4.position.x = -2;
+            scene.add(light4);
+            const light5 = light1.clone();
+            light5.position.z = -31;
+            light5.position.x = -2;
+            scene.add(light5);
+            const light6 = light1.clone();
+            light6.position.z = -19;
+            light6.position.x = -14;
+            scene.add(light6);
+            const light7 = light1.clone();
+            light7.position.z = -31;
+            light7.position.x = -14;
+            scene.add(light7);
 
             const raycaster_front = new THREE.Raycaster();
             const raycaster_left = new THREE.Raycaster();
