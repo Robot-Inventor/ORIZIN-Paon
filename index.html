@@ -1192,32 +1192,6 @@ THE SOFTWARE.
                 gltf.asset;
             });
 
-            // const light1 = new THREE.PointLight(0xFFFFFF, 3, 50, 1.0);
-            // light1.position.y = 5.5;
-            // scene.add(light1);
-            // const light2 = light1.clone();
-            // light2.position.z = 10;
-            // scene.add(light2);
-            // const light3 = light1.clone();
-            // light3.position.z = -10;
-            // scene.add(light3);
-            // const light4 = light1.clone();
-            // light4.position.z = -19;
-            // light4.position.x = -2;
-            // scene.add(light4);
-            // const light5 = light1.clone();
-            // light5.position.z = -31;
-            // light5.position.x = -2;
-            // scene.add(light5);
-            // const light6 = light1.clone();
-            // light6.position.z = -19;
-            // light6.position.x = -14;
-            // scene.add(light6);
-            // const light7 = light1.clone();
-            // light7.position.z = -31;
-            // light7.position.x = -14;
-            // scene.add(light7);
-
             const point_light = new THREE.PointLight(0xFFFFFF, 20, 50, 1.0);
             camera.add(point_light);
 
@@ -1287,7 +1261,7 @@ THE SOFTWARE.
                     }
                 }
 
-                const moving_distance = Math.min(1, 10 * render_cycle);
+                const moving_distance = Math.min(1, 6 * render_cycle);
                 if(is_move_forward_mode) {
                     pointer_controls.moveForward(moving_distance);
                 }
