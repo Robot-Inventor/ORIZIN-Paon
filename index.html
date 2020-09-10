@@ -1226,6 +1226,8 @@ THE SOFTWARE.
             const camera_direction_copy2 = new THREE.Vector3();
             const axis = new THREE.Vector3(0, 1, 0);
 
+            let render_cycle = 1 / 60;
+
             renderer.physicallyCorrectLights = true;
             renderer.render(scene, camera);
 
@@ -1236,6 +1238,8 @@ THE SOFTWARE.
                 // controls.update();
                 // fps_controls.update(clock.getDelta());
                 stats.begin();
+
+                render_start_time = new Date().getTime();
 
                 raycaster_front.setFromCamera(new THREE.Vector2(0, 0), camera);
                 // raycaster_front.set(camera.position, new THREE.Vector3(0, 0, -1));
@@ -1279,7 +1283,7 @@ THE SOFTWARE.
                     }
                 }
 
-                const moving_distance = 0.1;
+                const moving_distance = Math.min(1, 5 * render_cycle);
                 if(is_move_forward_mode) {
                     pointer_controls.moveForward(moving_distance);
                 }
@@ -1294,6 +1298,8 @@ THE SOFTWARE.
                 }
 
                 renderer.render(scene, camera);
+
+                render_cycle = (new Date().getTime() - render_start_time) / 100;
 
                 stats.end();
                 requestAnimationFrame(loop);
