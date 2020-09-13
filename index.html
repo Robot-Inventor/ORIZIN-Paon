@@ -395,6 +395,9 @@ THE SOFTWARE.
         <div id="page_loading">
             <p>Now Loading. Please wait...</p>
             <div class="loading_circle"></div>
+            <div id="progress_outer">
+                <span id="progress_value"></span><progress max="100" value="0"></progress>
+            </div>
         </div>
         <canvas id="game_canvas"></canvas>
         <div id="pointer_controls_menu">
@@ -910,6 +913,46 @@ THE SOFTWARE.
             }
         }
 
+        #page_loading #progress_outer {
+            margin-top: 2em;
+        }
+
+        #page_loading #progress_outer span {
+            margin-right: 1em;
+            font-family: "Yu Gothic", "YuGothic", sans-serif;
+            display: inline-block;
+            transform: translateY(0.4em);
+        }
+
+        #page_loading #progress_outer progress {
+            display: none;
+        }
+
+        progress {
+            -webkit-appearance: none;
+            width: 50vmin;
+            height: 0.5vmin;
+        }
+
+        progress:not([value]) {
+            -webkit-appearance: none;
+        }
+
+        progress:not([value])::-webkit-progress-bar {
+            background: none;
+            border-radius: 0.5rem;
+        }
+
+        progress::-webkit-progress-bar {
+            background: white;
+            border-radius: 0.5rem;
+        }
+
+        progress[value]::-webkit-progress-value {
+            background: rgb(22, 161, 216);
+            border-radius: 0.5rem;
+        }
+
         #usage {
             width: auto;
             height: auto;
@@ -1366,11 +1409,17 @@ THE SOFTWARE.
             // });
 
             const maze_loader = new THREE.GLTFLoader();
+            document.querySelector("#page_loading .loading_circle").style.display = "none";
+            document.querySelector("#page_loading progress").style.display = "inline-block";
             show_loading();
             maze_loader.load("3dmodel/original/maze.glb", (gltf) => {
                 scene.add(gltf.scene);
                 document.getElementById("usage").style.display = "block";
                 hide_loading();
+            }, (xhr) => {
+                const value = xhr.loaded / xhr.total * 100;
+                document.querySelector("#page_loading progress").value = value;
+                document.querySelector("#page_loading span").textContent = parseInt(value, 10) + "%";
             });
 
             const point_light = new THREE.PointLight(0xFFFFFF, 20, 50, 1.0);
