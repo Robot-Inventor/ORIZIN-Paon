@@ -400,6 +400,12 @@ THE SOFTWARE.
         <div id="pointer_controls_menu">
             <p>Click<i class="material_icon">mouse</i></p>
         </div>
+        <div id="usage">
+            <p>移動: 矢印またはWASD</p>
+            <p>視点: マウス</p>
+            <p>中断: esc</p>
+            <p>全画面: 左下のボタン</p>
+        </div>
         <div id="goal_message">
             <p>CLEAR!</p>
             <menu>
@@ -903,6 +909,24 @@ THE SOFTWARE.
                 transform: rotate(360deg);
             }
         }
+
+        #usage {
+            width: auto;
+            height: auto;
+            position: fixed;
+            top: 0;
+            right: 0;
+            z-index: 3;
+            padding: 1em;
+            display: none;
+        }
+
+        #usage p {
+            width: auto;
+            height: auto;
+            font-family: "Yu Gothic", "YuGothic", sans-serif;
+            font-weight: bold;
+        }
     </style>
     <script src="javascript/Stats.js"></script>
     <script src="javascript/three.min.js"></script>
@@ -1345,6 +1369,7 @@ THE SOFTWARE.
             show_loading();
             maze_loader.load("3dmodel/original/maze.glb", (gltf) => {
                 scene.add(gltf.scene);
+                document.getElementById("usage").style.display = "block";
                 hide_loading();
             });
 
