@@ -394,7 +394,7 @@ THE SOFTWARE.
         </div>
         <canvas id="game_canvas"></canvas>
         <div id="pointer_controls_menu">
-            <p>Clickしろ！</p>
+            <p>Click<i class="material_icon">mouse</i></p>
         </div>
         <div id="goal_message">
             <p>CLEAR!</p>
@@ -765,13 +765,27 @@ THE SOFTWARE.
             height: 100vh;
             margin: 0;
             padding: 0;
+            padding-top: 50vh;
             position: fixed;
             top: 0;
             left: 0;
-            background: rgba(100, 100, 100, 0.5);
+            background: rgba(0, 0, 0, 0.5);
             color: white;
             display: none;
             z-index: 2;
+            cursor: pointer;
+            text-align: center;
+            transform: translateY(-10vmin);
+        }
+
+        #pointer_controls_menu p {
+            font-size: 10vmin;
+            cursor: pointer;
+        }
+
+        #pointer_controls_menu p i {
+            font-size: 10vmin;
+            vertical-align: text-top;
             cursor: pointer;
         }
 
