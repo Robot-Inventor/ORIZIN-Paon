@@ -1289,15 +1289,19 @@ THE SOFTWARE.
             let is_move_right_mode = false;
             document.addEventListener("keydown", function() {
                 switch(event.keyCode) {
+                    case 38:
                     case 87:
                         is_move_forward_mode = true;
                         break;
+                    case 40:
                     case 83:
                         is_move_back_mode = true;
                         break;
+                    case 39:
                     case 68:
                         is_move_right_mode = true;
                         break;
+                    case 37:
                     case 65:
                         is_move_left_mode = true;
                         break;
@@ -1305,15 +1309,19 @@ THE SOFTWARE.
             });
             document.addEventListener("keyup", function() {
                 switch(event.keyCode) {
+                    case 38:
                     case 87:
                         is_move_forward_mode = false;
                         break;
+                    case 40:
                     case 83:
                         is_move_back_mode = false;
                         break;
+                    case 39:
                     case 68:
                         is_move_right_mode = false;
                         break;
+                    case 37:
                     case 65:
                         is_move_left_mode = false;
                         break;
