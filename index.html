@@ -392,6 +392,10 @@ THE SOFTWARE.
             <div class="cloud" style="top: 50vh; animation-delay: -7s;"></div>
             <div class="cloud" style="top: 80vh; animation-delay: -9s;"></div>
         </div>
+        <div id="page_loading">
+            <p>Now Loading. Please wait...</p>
+            <div class="loading_circle"></div>
+        </div>
         <canvas id="game_canvas"></canvas>
         <div id="pointer_controls_menu">
             <p>Click<i class="material_icon">mouse</i></p>
@@ -859,6 +863,46 @@ THE SOFTWARE.
         #goal_message menu button:hover i {
             color: rgb(22, 161, 216);
         }
+
+        #page_loading {
+            z-index: 4;
+            background: #010101;
+            width: 100vw;
+            height: 100vw;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transition: 0.3s;
+            text-align: center;
+            padding-top: 50vh;
+            transform: translateY(-5vmin);
+        }
+
+        #page_loading p {
+            font-size: 5vmin;
+            font-family: "Yu Gothic", "YuGothic", sans-serif;
+            font-weight: lighter;
+        }
+
+        #page_loading .loading_circle {
+            width: 10vmin;
+            height: 10vmin;
+            animation: loading_circle_animation linear 1s infinite;
+            border: solid 1vmin white;
+            border-color: white white white black;
+            border-radius: 100%;
+            display: inline-block;
+            margin: 1em;
+        }
+
+        @keyframes loading_circle_animation {
+            0% {
+                transform: none;
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
     <script src="javascript/Stats.js"></script>
     <script src="javascript/three.min.js"></script>
@@ -882,6 +926,26 @@ THE SOFTWARE.
             const text = await response.text();
             audio_element.src = "data:audio/mpeg;base64," + text.replace(/<0x41>/g, "A").replace(/<a>/g, "z");
         }
+
+        function show_loading() {
+            const loading_style = document.getElementById("page_loading").style;
+            loading_style.transition = "0.3s";
+            loading_style.display = "block";
+            loading_style.opacity = "1";
+        }
+
+        function hide_loading() {
+            const loading_style = document.getElementById("page_loading").style;
+            loading_style.transition = "0.3s";
+            loading_style.opacity = "0";
+            setTimeout(() => {
+                loading_style.display = "none";
+            }, 300);
+        }
+
+        window.addEventListener("load", function() {
+            hide_loading();
+        });
 
         // async function key_generater() {
         //     const key = await crypto.subtle.generateKey(
@@ -1270,13 +1334,10 @@ THE SOFTWARE.
             // });
 
             const maze_loader = new THREE.GLTFLoader();
+            show_loading();
             maze_loader.load("3dmodel/original/maze.glb", (gltf) => {
                 scene.add(gltf.scene);
-                gltf.animations;
-                gltf.scene;
-                gltf.scenes;
-                gltf.cameras;
-                gltf.asset;
+                hide_loading();
             });
 
             const point_light = new THREE.PointLight(0xFFFFFF, 20, 50, 1.0);
@@ -1296,6 +1357,8 @@ THE SOFTWARE.
 
             let render_cycle = 1 / 60;
 
+            let is_cleared = false;
+
             renderer.physicallyCorrectLights = true;
             renderer.render(scene, camera);
 
@@ -1305,11 +1368,16 @@ THE SOFTWARE.
             function loop() {
                 // controls.update();
                 // fps_controls.update(clock.getDelta());
+                if(is_cleared) {
+                    return
+                }
+
                 stats.begin();
 
                 render_start_time = new Date().getTime();
 
-                raycaster_front.set(camera.position, new THREE.Vector3(0, 0, -1));
+                // raycaster_front.set(camera.position, new THREE.Vector3(0, 0, -1));
+                raycaster_front.setFromCamera(camera, new THREE.Vector3());
                 const intersects_front = raycaster_front.intersectObjects(scene.children, true);
                 if(intersects_front.length > 0) {
                     if(intersects_front[0].distance < 2) {
