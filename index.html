@@ -1390,8 +1390,6 @@ THE SOFTWARE.
 
             let render_cycle = 1 / 60;
 
-            let is_cleared = false;
-
             renderer.physicallyCorrectLights = true;
             renderer.render(scene, camera);
 
@@ -1401,16 +1399,13 @@ THE SOFTWARE.
             function loop() {
                 // controls.update();
                 // fps_controls.update(clock.getDelta());
-                if(is_cleared) {
-                    return
-                }
 
                 stats.begin();
 
                 render_start_time = new Date().getTime();
 
                 // raycaster_front.set(camera.position, new THREE.Vector3(0, 0, -1));
-                raycaster_front.setFromCamera(camera, new THREE.Vector3());
+                raycaster_front.setFromCamera(new THREE.Vector2(), camera);
                 const intersects_front = raycaster_front.intersectObjects(scene.children, true);
                 if(intersects_front.length > 0) {
                     if(intersects_front[0].distance < 2) {
