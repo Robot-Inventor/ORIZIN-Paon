@@ -1424,9 +1424,16 @@ THE SOFTWARE.
 
             const point_light = new THREE.PointLight(0xFFFFFF, 20, 50, 1.0);
             camera.add(point_light);
-            const goal_light = new THREE.PointLight(0x00FF00, 10, 50, 1.0);
-            goal_light.position.set(-38, 2, -54);
+            light_position_list = [[-28, 2, -54], [18.2, 2, -54], [27, 2, -81]];
+            const goal_light = new THREE.PointLight(0x00FF00, 20, 20, 2.5);
+            goal_light.position.set(...light_position_list[0]);
             scene.add(goal_light);
+            const poison_light = new THREE.PointLight(0x9D00FF, 20, 20, 2.5);
+            poison_light.position.set(...light_position_list[1]);
+            scene.add(poison_light);
+            const curse_light = new THREE.PointLight(0xFF0000, 20, 20, 2.5);
+            curse_light.position.set(...light_position_list[2]);
+            scene.add(curse_light);
 
             const raycaster_front = new THREE.Raycaster();
             const raycaster_left = new THREE.Raycaster();
