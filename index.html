@@ -409,8 +409,8 @@ THE SOFTWARE.
             <p>中断: esc</p>
             <p>全画面: 左下のボタン</p>
         </div>
-        <div id="goal_message">
-            <p>CLEAR!</p>
+        <div id="end_message">
+            <p></p>
             <menu>
                 <button onclick="location.reload()">もう1回<i class="material_icon">refresh</i></button>
             </menu>
@@ -806,7 +806,7 @@ THE SOFTWARE.
             display: none;
         }
 
-        #goal_message {
+        #end_message {
             margin: 0;
             padding: 0;
             padding-top: 50vh;
@@ -821,17 +821,17 @@ THE SOFTWARE.
             background: rgba(0, 0, 0, 0.5);
         }
 
-        #goal_message p {
+        #end_message p {
             width: 100vw;
             height: auto;
             padding: 0;
             padding-left: 0.2em;
             margin: 0;
             text-align: center;
-            font-size: 20vmin;
+            font-size: 10vmin;
         }
 
-        #goal_message menu {
+        #end_message menu {
             width: 100vw;
             height: auto;
             margin: 0;
@@ -839,7 +839,7 @@ THE SOFTWARE.
             text-align: center;
         }
 
-        #goal_message menu button {
+        #end_message menu button {
             display: inline-block;
             font-size: 5vmin;
             margin: 1em;
@@ -856,7 +856,7 @@ THE SOFTWARE.
             letter-spacing: 0em;
         }
 
-        #goal_message menu button i {
+        #end_message menu button i {
             font-size: 5vmin;
             cursor: pointer;
             vertical-align: bottom;
@@ -864,12 +864,12 @@ THE SOFTWARE.
             transition: 0.3s;
         }
 
-        #goal_message menu button:hover {
+        #end_message menu button:hover {
             background: white;
             color: rgb(22, 161, 216);
         }
 
-        #goal_message menu button:hover i {
+        #end_message menu button:hover i {
             color: rgb(22, 161, 216);
         }
 
@@ -1308,7 +1308,7 @@ THE SOFTWARE.
                     }, generate_random());
                 });;
             }
-            random_timing_player("audio/お食事モンスター.mp3.base64")
+            random_timing_player("audio/お食事モンスター.mp3.base64");
 
             window.addEventListener("resize", resize_canvas);
 
@@ -1424,27 +1424,104 @@ THE SOFTWARE.
 
             const point_light = new THREE.PointLight(0xFFFFFF, 20, 50, 1.0);
             camera.add(point_light);
-            light_position_list = [[-28, 2, -54], [18.2, 2, -54], [27, 2, -81]];
-            const goal_light = new THREE.PointLight(0x00FF00, 20, 20, 2.5);
-            goal_light.position.set(...light_position_list[0]);
+
+            const light_position_data = [
+                {
+                    "lightPlace": [-28, 2, -54],
+                    "goalArea": {
+                        "xMin": -39,
+                        "xMax": -25,
+                        "zMin": -55,
+                        "zMax": -52
+                    },
+                    "trapArea": {
+                        "xMin": -39,
+                        "xMax": -58,
+                        "zMin": -55,
+                        "zMax": -52
+                    }
+                },
+                {
+                    "lightPlace": [18, 2, -54],
+                    "goalArea": {
+                        "xMin": 15,
+                        "xMax": 29,
+                        "zMin": -55,
+                        "zMax": -52
+                    },
+                    "trapArea": {
+                        "xMin": 8,
+                        "xMax": 28,
+                        "zMin": -55,
+                        "zMax": -52
+                    }
+                },
+                {
+                    "lightPlace": [27, 2, -81],
+                    "goalArea": {
+                        "xMin": 25,
+                        "xMax": 34,
+                        "zMin": -82,
+                        "zMax": -80
+                    },
+                    "trapArea": {
+                        "xMin": 20,
+                        "xMax": 34,
+                        "zMin": -83,
+                        "zMax": -79
+                    }
+                }
+            ];
+
+            for(let i = light_position_data.length - 1; i > 0; i --) {
+                let r = Math.floor(Math.random() * (i + 1));
+                let tmp = light_position_data[i];
+                light_position_data[i] = light_position_data[r];
+                light_position_data[r] = tmp;
+            }
+
+            const light_intensity = 20;
+            const light_distance = 20;
+            const light_decay = 2.5;
+            const goal_light = new THREE.PointLight(0x00FF00, light_intensity, light_distance, light_decay);
+            goal_light.position.set(...light_position_data[0].lightPlace);
             scene.add(goal_light);
-            const poison_light = new THREE.PointLight(0x9D00FF, 20, 20, 2.5);
-            poison_light.position.set(...light_position_list[1]);
+            const poison_light = new THREE.PointLight(0x9D00FF, light_intensity, light_distance, light_decay);
+            poison_light.position.set(...light_position_data[1].lightPlace);
             scene.add(poison_light);
-            const curse_light = new THREE.PointLight(0xFF0000, 20, 20, 2.5);
-            curse_light.position.set(...light_position_list[2]);
+            const curse_light = new THREE.PointLight(0xFF0000, light_intensity, light_distance, light_decay);
+            curse_light.position.set(...light_position_data[2].lightPlace);
             scene.add(curse_light);
 
             const raycaster_front = new THREE.Raycaster();
+            const raycaster_back = new THREE.Raycaster();
             const raycaster_left = new THREE.Raycaster();
             const raycaster_right = new THREE.Raycaster();
-            const raycaster_back = new THREE.Raycaster();
             const camera_direction = new THREE.Vector3();
             const camera_direction_copy = new THREE.Vector3();
             const camera_direction_copy2 = new THREE.Vector3();
+            const camera_direction_copy3 = new THREE.Vector3();
             const axis = new THREE.Vector3(0, 1, 0);
 
+            const distance_limit = {
+                "front": 2,
+                "back": 1,
+                "right": 1,
+                "left": 1
+            };
+
             let render_cycle = 1 / 60;
+
+            function show_end_message(message) {
+                document.querySelector("#end_message p").textContent = message;
+                document.getElementById("end_message").style.display = "block";
+                pointer_controls.unlock();
+                document.getElementById("pointer_controls_menu").style.display = "none";
+            }
+
+            function is_in_area(object_position, area_data) {
+                return area_data.xMin < object_position.x && object_position.x < area_data.xMax && area_data.zMin < object_position.z && object_position.z < area_data.zMax;
+            }
 
             renderer.physicallyCorrectLights = true;
             renderer.render(scene, camera);
@@ -1460,45 +1537,52 @@ THE SOFTWARE.
 
                 render_start_time = new Date().getTime();
 
-                // raycaster_front.set(camera.position, new THREE.Vector3(0, 0, -1));
-                raycaster_front.setFromCamera(new THREE.Vector2(), camera);
-                const intersects_front = raycaster_front.intersectObjects(scene.children, true);
-                if(intersects_front.length > 0) {
-                    if(intersects_front[0].distance < 2) {
-                        is_move_forward_mode = false;
-                        pointer_controls.moveForward(intersects_front[0].distance - 1.9);
-                    }
-                }
-
                 camera.getWorldDirection(camera_direction);
                 camera.getWorldDirection(camera_direction_copy);
                 camera.getWorldDirection(camera_direction_copy2);
+                camera.getWorldDirection(camera_direction_copy3);
                 const camera_position = camera.position;
 
-                raycaster_right.set(camera_position, camera_direction.applyAxisAngle(axis, -1 * (Math.PI / 2)));
-                const intersects_right = raycaster_right.intersectObjects(scene.children, true);
-                if(intersects_right.length > 0) {
-                    if(intersects_right[0].distance < 1) {
-                        is_move_right_mode = false;
-                        pointer_controls.moveRight(intersects_right[0].distance - 0.9);
+                raycaster_front.set(camera_position, new THREE.Vector3(camera_direction.x, 0, camera_direction.z));
+                const intersects_front = raycaster_front.intersectObjects(scene.children, true);
+                if(intersects_front.length > 0) {
+                    const distance = intersects_front[0].distance;
+                    if(distance < distance_limit.front) {
+                        is_move_forward_mode = false;
+                        pointer_controls.moveForward(distance - distance_limit.front + 0.1);
                     }
                 }
 
-                raycaster_left.set(camera_position, camera_direction_copy.applyAxisAngle(axis, Math.PI / 2));
-                const intersects_left = raycaster_left.intersectObjects(scene.children, true);
-                if(intersects_left.length > 0) {
-                    if(intersects_left[0].distance < 1) {
-                        is_move_left_mode = false;
-                        pointer_controls.moveRight(-1 * (intersects_left[0].distance - 0.9));
-                    }
-                }
-
-                raycaster_back.set(camera_position, camera_direction_copy2.applyAxisAngle(axis, Math.PI));
+                camera_direction_copy.applyAxisAngle(axis, Math.PI);
+                raycaster_back.set(camera_position, new THREE.Vector3(camera_direction_copy.x, 0, camera_direction_copy.z));
                 const intersects_back = raycaster_back.intersectObjects(scene.children, true);
                 if(intersects_back.length > 0) {
-                    if(intersects_back[0].distance < 1) {
+                    const distance = intersects_back[0].distance;
+                    if(distance < distance_limit.back) {
                         is_move_back_mode = false;
-                        pointer_controls.moveForward(-1 * (intersects_back[0].distance - 0.9));
+                        pointer_controls.moveForward(-1 * (distance - distance_limit.back + 0.1));
+                    }
+                }
+
+                camera_direction_copy2.applyAxisAngle(axis, -1 * (Math.PI / 2));
+                raycaster_right.set(camera_position, new THREE.Vector3(camera_direction_copy2.x, 0, camera_direction_copy2.z));
+                const intersects_right = raycaster_right.intersectObjects(scene.children, true);
+                if(intersects_right.length > 0) {
+                    const distance = intersects_right[0].distance;
+                    if(distance < distance_limit.right) {
+                        is_move_right_mode = false;
+                        pointer_controls.moveRight(distance - distance_limit.right + 0.1);
+                    }
+                }
+
+                camera_direction_copy3.applyAxisAngle(axis, Math.PI / 2);
+                raycaster_left.set(camera_position, new THREE.Vector3(camera_direction_copy3.x, 0, camera_direction_copy3.z));
+                const intersects_left = raycaster_left.intersectObjects(scene.children, true);
+                if(intersects_left.length > 0) {
+                    const distance = intersects_left[0].distance;
+                    if(distance < distance_limit.left) {
+                        is_move_left_mode = false;
+                        pointer_controls.moveRight(-1 * (distance - distance_limit.left + 0.1));
                     }
                 }
 
@@ -1516,10 +1600,14 @@ THE SOFTWARE.
                     pointer_controls.moveRight(-1 * moving_distance);
                 }
 
-                if(-39 < camera_position.x && camera_position.x < -37 && -55.1 < camera_position.z && camera_position.z < -52) {
-                    document.getElementById("goal_message").style.display = "block";
-                    pointer_controls.unlock();
-                    document.getElementById("pointer_controls_menu").style.display = "none";
+                if(is_in_area(camera_position, light_position_data[0].goalArea)) {
+                    show_end_message("CLEAR!");
+                }
+                if(is_in_area(camera_position, light_position_data[1].trapArea)) {
+                    show_end_message("毒にやられた！");
+                }
+                if(is_in_area(camera_position, light_position_data[2].trapArea)) {
+                    show_end_message("呪われてしまった！");
                 }
 
                 renderer.render(scene, camera);
