@@ -983,6 +983,7 @@ THE SOFTWARE.
         load_audio_data("audio/物語の始まり.mp3.base64", main_music);
         let main_music_play_status = true;
         let is_any_keys_pressed_or_clicked = false;
+        let arrow_bgm = true;
 
         const stats = new Stats();
         stats.showPanel(0);
@@ -1170,8 +1171,10 @@ THE SOFTWARE.
         document.getElementById("toggle_bgm_setting").addEventListener("change", function() {
             if (document.getElementById("toggle_bgm_setting").checked) {
                 play_main_music();
+                arrow_bgm = true;
             } else {
                 stop_main_music();
+                arrow_bgm = false;
             }
         });
 
@@ -1285,7 +1288,9 @@ THE SOFTWARE.
                     player();
                 });
             }
-            play_horror_music();
+            if(arrow_bgm) {
+                play_horror_music();
+            }
 
             function random_timing_player(file_path) {
                 const roar = new Audio();
@@ -1308,7 +1313,9 @@ THE SOFTWARE.
                     }, generate_random());
                 });;
             }
-            random_timing_player("audio/お食事モンスター.mp3.base64");
+            if(arrow_bgm) {
+                random_timing_player("audio/お食事モンスター.mp3.base64");
+            }
 
             window.addEventListener("resize", resize_canvas);
 
