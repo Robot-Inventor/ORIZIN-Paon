@@ -1511,6 +1511,7 @@ THE SOFTWARE.
             };
 
             let render_cycle = 1 / 60;
+            let frame_counter = 0;
 
             function show_end_message(message) {
                 document.querySelector("#end_message p").textContent = message;
@@ -1526,16 +1527,18 @@ THE SOFTWARE.
             renderer.physicallyCorrectLights = true;
             renderer.render(scene, camera);
 
+            setInterval(() => {
+                render_cycle = 1 / frame_counter;
+                frame_counter = 0;
+            }, 1000);
+
             resize_canvas();
             loop();
 
             function loop() {
                 // controls.update();
                 // fps_controls.update(clock.getDelta());
-
                 stats.begin();
-
-                render_start_time = new Date().getTime();
 
                 camera.getWorldDirection(camera_direction);
                 camera.getWorldDirection(camera_direction_copy);
@@ -1612,7 +1615,7 @@ THE SOFTWARE.
 
                 renderer.render(scene, camera);
 
-                render_cycle = (new Date().getTime() - render_start_time) / 100;
+                frame_counter++;
 
                 stats.end();
                 requestAnimationFrame(loop);
