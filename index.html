@@ -380,10 +380,26 @@ THE SOFTWARE.
                     <h1><span class="back">←</span>このゲームについて</h1>
                     このゲームはRobot-Inventorによって作られ，MITライセンスの下に配布されており，誰でも自由に無料で利用することができます。また，本ゲームは，くそいサイト様のゲーム「ぴえん」に触発されていますが，直接の関係はありません。ご注意ください。
                 </div>
-                <div id="ask_about_tutorial_page">
-                    <h1><span class="back">←</span>チュートリアル</h1>
-                    <button>チュートリアルへ</button>
-                    <button id="skip_tutorial">チュートリアルをスキップ</button>
+                <div id="ask_about_device_page">
+                    <h1><span class="back">←</span>デバイスを選択</h1>
+                    <div id="smartphone">
+                        <button>
+                            スマートフォン<br>
+                            <i class="material_icon">smartphone</i>
+                            <p>
+                                タッチパネルとジャイロセンサーの両方を搭載している場合に選択してください。
+                            </p>
+                        </button>
+                    </div>
+                    <div id="pc">
+                        <button>
+                            PC<br>
+                            <i class="material_icon">desktop_windows</i>
+                            <p>
+                                キーボードとマウスの両方が接続されている場合に選択してください。
+                            </p>
+                        </button>
+                    </div>
                 </div>
             </div>
             <div id="copyright">Copyright (c) 2020 Robot-Inventor</div>
@@ -641,6 +657,41 @@ THE SOFTWARE.
         #oss_licence_page details pre {
             white-space: pre-wrap;
             padding-left: 1rem;
+        }
+
+        #menu_outer #ask_about_device_page div button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        #menu_outer #ask_about_device_page div button:hover {
+            background: transparent;
+            border: none;
+            color: white;
+            transform: none;
+        }
+
+        #menu_outer #ask_about_device_page div button i.material_icon {
+            font-size: 10vmin;
+            cursor: pointer;
+        }
+
+        #menu_outer #ask_about_device_page div button i.material_icon + p {
+            font-size: 40%;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        #menu_outer div#ask_about_device_page div#smartphone,
+        #menu_outer div#ask_about_device_page div#pc {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 1em;
+            margin: 0;
+            height: auto;
+            background: transparent;
+            display: inline-block;
         }
 
         #copyright {
@@ -973,9 +1024,8 @@ THE SOFTWARE.
     </style>
     <script src="javascript/Stats.js"></script>
     <script src="javascript/three.min.js"></script>
-    <!-- <script src="javascript/OrbitControls.js"></script> -->
     <script src="javascript/PointerLockControls.js"></script>
-    <script src="javascript/FirstPersonControls.js"></script>
+    <script src="javascript/DeviceOrientationControls.js"></script>
     <script src="javascript/GLTFLoader.js"></script>
     <script>
         const CHANGE_PAGE_TRANSITION_TIME = 100;
@@ -984,6 +1034,8 @@ THE SOFTWARE.
         let main_music_play_status = true;
         let is_any_keys_pressed_or_clicked = false;
         let arrow_bgm = true;
+        let is_pc = false;
+        let is_smartphone = false;
 
         const stats = new Stats();
         stats.showPanel(0);
@@ -1014,76 +1066,6 @@ THE SOFTWARE.
         window.addEventListener("load", function() {
             hide_loading();
         });
-
-        // async function key_generater() {
-        //     const key = await crypto.subtle.generateKey(
-        //         {
-        //             name: "AES-GCM",
-        //             length: 256
-        //         },
-        //         true,
-        //         ["encrypt", "decrypt"]
-        //     );
-        //     const exported = await window.crypto.subtle.exportKey(
-        //         "jwk",
-        //         key
-        //     );
-        //     document.getElementById("hoge").value = JSON.stringify(exported);
-        // }
-        // key_generater();
-
-        // async function encrypter() {
-        //     const jwk_data = '{"alg":"A256GCM","ext":true,"k":"WPnYrAtUepgQIjieZnVsakQPBpfXHX2aoQbcFgMq-1c","key_ops":["encrypt","decrypt"],"kty":"oct"}';
-        //     const encoder = new TextEncoder();
-        //     const decoder = new TextDecoder();
-        //     const key = await crypto.subtle.importKey(
-        //         "jwk",
-        //         JSON.parse(jwk_data),
-        //         "AES-GCM",
-        //         false,
-        //         ["encrypt", "decrypt"]
-        //     );
-        //     // const response = await fetch("audio/物語の始まり.mp3.base64");
-        //     // const text = await response.text();
-        //     const text = "hoge";
-        //     const encoded = encoder.encode(text);
-        //     const iv = encoder.encode(atob("kXNUZG5x+0xsm4xv"));
-        //     const result = await crypto.subtle.encrypt(
-        //         {
-        //             name: "AES-GCM",
-        //             iv: iv
-        //         },
-        //         key,
-        //         encoded
-        //     );
-        //     document.getElementById("hoge").value = String.fromCharCode.apply(null, new Uint8Array(result));
-        // }
-        // encrypter();
-
-//         async function decrypter() {
-//             const encoder = new TextEncoder();
-//             const iv = encoder.encode(atob("kXNUZG5x+0xsm4xv"));
-//             const jwk_data = '{"alg":"A256GCM","ext":true,"k":"WPnYrAtUepgQIjieZnVsakQPBpfXHX2aoQbcFgMq-1c","key_ops":["encrypt","decrypt"],"kty":"oct"}';
-//             const key = await crypto.subtle.importKey(
-//                 "jwk",
-//                 JSON.parse(jwk_data),
-//                 "AES-GCM",
-//                 false,
-//                 ["encrypt", "decrypt"]
-//             );
-//             const encoded = encoder.encode(`¢ºö½È2\)ó´x.Î
-// `);
-//             const result = await crypto.subtle.decrypt(
-//                 {
-//                     name: "AES-GCM",
-//                     iv: iv
-//                 },
-//                 key,
-//                 encoded
-//             );
-//             console.log(result)
-//         }
-//         decrypter();
 
         function hide_page(element, transition_time=100) {
             const element_style = document.querySelector(element).style;
@@ -1235,11 +1217,11 @@ THE SOFTWARE.
         });
 
         document.querySelector("#top_page #menu_outer #title_page #start_button").addEventListener("click", function() {
-            change_page("#top_page #menu_outer #title_page", "#top_page #menu_outer #ask_about_tutorial_page", CHANGE_PAGE_TRANSITION_TIME);
+            change_page("#top_page #menu_outer #title_page", "#top_page #menu_outer #ask_about_device_page", CHANGE_PAGE_TRANSITION_TIME);
         });
 
-        document.querySelector("#top_page #menu_outer #ask_about_tutorial_page .back").addEventListener("click", function() {
-            change_page("#top_page #menu_outer #ask_about_tutorial_page", "#top_page #menu_outer #title_page", CHANGE_PAGE_TRANSITION_TIME);
+        document.querySelector("#top_page #menu_outer #ask_about_device_page .back").addEventListener("click", function() {
+            change_page("#top_page #menu_outer #ask_about_device_page", "#top_page #menu_outer #title_page", CHANGE_PAGE_TRANSITION_TIME);
         });
 
         function show_game_canvas() {
@@ -1255,7 +1237,15 @@ THE SOFTWARE.
             }, 2000);
         }
 
-        document.querySelector("#top_page #menu_outer #ask_about_tutorial_page #skip_tutorial").addEventListener("click", function() {
+        
+        document.querySelector("#top_page #menu_outer #ask_about_device_page #smartphone").addEventListener("click", function() {
+                is_smartphone = true;
+                show_game_canvas();
+                game_start();
+        });
+
+        document.querySelector("#top_page #menu_outer #ask_about_device_page #pc").addEventListener("click", function() {
+            is_pc = true;
             show_game_canvas();
             game_start();
         });
@@ -1272,7 +1262,6 @@ THE SOFTWARE.
                 renderer.setSize(canvas_width, canvas_height);
                 camera.aspect = canvas_width / canvas_height;
                 camera.updateProjectionMatrix();
-                // controls.handleResize();
             }
 
             function play_horror_music() {
@@ -1319,8 +1308,6 @@ THE SOFTWARE.
 
             window.addEventListener("resize", resize_canvas);
 
-            document.getElementById("pointer_controls_menu").style.display = "block";
-
             const canvas_width = innerWidth;
             const canvas_height = innerHeight;
             const renderer = new THREE.WebGLRenderer({
@@ -1338,24 +1325,25 @@ THE SOFTWARE.
             );
             camera.position.set(0, 2, 5);
             scene.add(camera);
-            // const controls = new THREE.OrbitControls(camera, renderer.domElement);
-            // controls.enableDamping = true;
-            // controls.dampingFactor = 0.2;
-            // const fps_controls = new THREE.FirstPersonControls(camera, document.getElementById("game_canvas"));
-            // fps_controls.lookSpeed = 0.2;
-            // fps_controls.movementSpeed = 5;
-            // fps_controls.lookVertical = false;
 
-            const pointer_controls = new THREE.PointerLockControls(camera, document.getElementById("game_canvas"));
-            document.getElementById("pointer_controls_menu").addEventListener("click", function() {
-                pointer_controls.lock();
-            });
-            pointer_controls.addEventListener("lock", function() {
-                document.getElementById("pointer_controls_menu").style.display = "none";
-            });
-            pointer_controls.addEventListener("unlock", function() {
+            let orientation_controls;
+            let pointer_controls;
+            if(is_pc) {
                 document.getElementById("pointer_controls_menu").style.display = "block";
-            });
+                pointer_controls = new THREE.PointerLockControls(camera, document.getElementById("game_canvas"));
+                document.getElementById("pointer_controls_menu").addEventListener("click", function() {
+                    pointer_controls.lock();
+                });
+                pointer_controls.addEventListener("lock", function() {
+                    document.getElementById("pointer_controls_menu").style.display = "none";
+                });
+                pointer_controls.addEventListener("unlock", function() {
+                    document.getElementById("pointer_controls_menu").style.display = "block";
+                });
+            }
+            if(is_smartphone) {
+                orientation_controls = new THREE.DeviceOrientationControls(camera);
+            }
 
             let is_move_forward_mode = false;
             let is_move_back_mode = false;
@@ -1401,8 +1389,25 @@ THE SOFTWARE.
                         break;
                 }
             });
-            // const clock = new THREE.Clock(true);
-            // raycaster_front.setFromCamera(new THREE.Vector2(0, 0), camera);
+            function move_forward(distance) {
+                if(is_pc) {
+                    pointer_controls.moveForward(distance);
+                } else if(is_smartphone) {
+                    vec = new THREE.Vector3();
+                    vec.setFromMatrixColumn(camera.matrix, 0);
+                    vec.crossVectors(camera.up, vec);
+                    camera.position.addScaledVector(vec, distance);
+                }
+            }
+            function move_right(distance) {
+                if(is_pc) {
+                    pointer_controls.moveRight(distance);
+                } else if(is_smartphone) {
+                    vec = new THREE.Vector3();
+                    vec.setFromMatrixColumn(camera.matrix, 0);
+                    camera.position.addScaledVector(vec, distance);
+                }
+            }
 
             // const elephant_loader = new THREE.GLTFLoader();
             // elephant_loader.load("3dmodel/Elephant 3.glb", (gltf) => {
@@ -1523,8 +1528,10 @@ THE SOFTWARE.
             function show_end_message(message) {
                 document.querySelector("#end_message p").textContent = message;
                 document.getElementById("end_message").style.display = "block";
-                pointer_controls.unlock();
-                document.getElementById("pointer_controls_menu").style.display = "none";
+                if(is_pc) {
+                    pointer_controls.unlock();
+                    document.getElementById("pointer_controls_menu").style.display = "none";
+                }
             }
 
             function is_in_area(object_position, area_data) {
@@ -1559,7 +1566,7 @@ THE SOFTWARE.
                     const distance = intersects_front[0].distance;
                     if(distance < distance_limit.front) {
                         is_move_forward_mode = false;
-                        pointer_controls.moveForward(distance - distance_limit.front + 0.1);
+                        move_forward(distance - distance_limit.front + 0.1);
                     }
                 }
 
@@ -1570,7 +1577,7 @@ THE SOFTWARE.
                     const distance = intersects_back[0].distance;
                     if(distance < distance_limit.back) {
                         is_move_back_mode = false;
-                        pointer_controls.moveForward(-1 * (distance - distance_limit.back + 0.1));
+                        move_forward(-1 * (distance - distance_limit.back + 0.1));
                     }
                 }
 
@@ -1581,7 +1588,7 @@ THE SOFTWARE.
                     const distance = intersects_right[0].distance;
                     if(distance < distance_limit.right) {
                         is_move_right_mode = false;
-                        pointer_controls.moveRight(distance - distance_limit.right + 0.1);
+                        move_right(distance - distance_limit.right + 0.1);
                     }
                 }
 
@@ -1592,22 +1599,22 @@ THE SOFTWARE.
                     const distance = intersects_left[0].distance;
                     if(distance < distance_limit.left) {
                         is_move_left_mode = false;
-                        pointer_controls.moveRight(-1 * (distance - distance_limit.left + 0.1));
+                        move_right(-1 * (distance - distance_limit.left + 0.1));
                     }
                 }
 
                 const moving_distance = Math.min(1, 6 * render_cycle);
                 if(is_move_forward_mode) {
-                    pointer_controls.moveForward(moving_distance);
+                    move_forward(moving_distance);
                 }
                 if(is_move_back_mode) {
-                    pointer_controls.moveForward(-1 * moving_distance);
+                    move_forward(-1 * moving_distance);
                 }
                 if(is_move_right_mode) {
-                    pointer_controls.moveRight(moving_distance);
+                    move_right(moving_distance);
                 }
                 if(is_move_left_mode) {
-                    pointer_controls.moveRight(-1 * moving_distance);
+                    move_right(-1 * moving_distance);
                 }
 
                 if(is_in_area(camera_position, light_position_data[0].goalArea)) {
@@ -1618,6 +1625,10 @@ THE SOFTWARE.
                 }
                 if(is_in_area(camera_position, light_position_data[2].trapArea)) {
                     show_end_message("呪われてしまった！");
+                }
+
+                if(is_smartphone) {
+                    orientation_controls.update();
                 }
 
                 renderer.render(scene, camera);
