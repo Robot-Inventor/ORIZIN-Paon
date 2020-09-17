@@ -420,10 +420,16 @@ THE SOFTWARE.
             <p>Click<i class="material_icon">mouse</i></p>
         </div>
         <div id="usage">
-            <p>移動: 矢印またはWASD</p>
-            <p>視点: マウス</p>
-            <p>中断: esc</p>
-            <p>全画面: 左下のボタン</p>
+            <p>移動: <span class="for_pc">矢印またはWASD</span><span class="for_smartphone">キーボードの矢印・WASDまたは左下のボタン</span></p>
+            <p>視点: <spasn class="for_pc">マウス</spasn><span class="for_smartphone">スマホの向き</span></p>
+            <p class="for_pc">中断: esc</p>
+            <p>全画面: 右下のボタン</p>
+        </div>
+        <div id="controller" class="for_smartphone">
+            <div id="controller_forward"><i class="material_icon">keyboard_arrow_up</i></div>
+            <div id="controller_back"><i class="material_icon">keyboard_arrow_down</i></div>
+            <div id="controller_right"><i class="material_icon">keyboard_arrow_right</i></div>
+            <div id="controller_left"><i class="material_icon">keyboard_arrow_left</i></div>
         </div>
         <div id="end_message">
             <p></p>
@@ -804,20 +810,20 @@ THE SOFTWARE.
             position: fixed;
             width: 3rem;
             height: 3rem;
-            bottom: 1rem;
-            left: 1rem;
+            bottom: 0;
+            right: 0;
             margin: 0;
             padding: 0.5rem;
             border-radius: 3rem;
             z-index: 3;
-            background: white;
+            background:transparent;
             box-sizing: border-box;
             font-size: 2rem;
             cursor: pointer;
         }
 
         #fullscreen_button i.material_icon {
-            color: #010101;
+            color: white;
             padding: 0;
             margin: 0;
             transform: translateY(-0.2rem);
@@ -1015,11 +1021,56 @@ THE SOFTWARE.
             display: none;
         }
 
-        #usage p {
+        #usage p,
+        #usage p span {
             width: auto;
             height: auto;
             font-family: "Yu Gothic", "YuGothic", sans-serif;
             font-weight: bold;
+        }
+
+        #controller {
+            width: auto;
+            height: 5rem;
+            position: fixed;
+            bottom: 0;
+            left: 1rem;
+            padding: 0;
+            margin: 0;
+            display: none;
+        }
+
+        #controller div {
+            background: white;
+            width: 2rem;
+            height: 2rem;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            border-radius: 100%;
+            display: inline-block;
+            font-size: 150%;
+            cursor: pointer;
+            position: absolute;
+        }
+
+        #controller_forward {
+            top: -2rem;
+            left: 2rem;
+        }
+
+        #controller_back {
+            top: 2rem;
+            left: 2rem;
+        }
+
+        #controller_right {
+            left: 4rem;
+        }
+
+        #controller div i.material_icon {
+            color: #010101;
+            cursor: pointer;
         }
     </style>
     <script src="javascript/Stats.js"></script>
@@ -1340,9 +1391,16 @@ THE SOFTWARE.
                 pointer_controls.addEventListener("unlock", function() {
                     document.getElementById("pointer_controls_menu").style.display = "block";
                 });
+                document.querySelectorAll(".for_smartphone").forEach(function(element) {
+                    element.style.display = "none";
+                });
             }
             if(is_smartphone) {
                 orientation_controls = new THREE.DeviceOrientationControls(camera);
+                document.getElementById("controller").style.display = "block";
+                document.querySelectorAll(".for_pc").forEach(function(element) {
+                    element.style.display = "none";
+                });
             }
 
             let is_move_forward_mode = false;
@@ -1389,6 +1447,31 @@ THE SOFTWARE.
                         break;
                 }
             });
+            document.getElementById("controller_forward").addEventListener("touchstart", function() {
+                is_move_forward_mode = true;
+            });
+            document.getElementById("controller_back").addEventListener("touchstart", function() {
+                is_move_back_mode = true;
+            });
+            document.getElementById("controller_left").addEventListener("touchstart", function() {
+                is_move_left_mode = true;
+            });
+            document.getElementById("controller_right").addEventListener("touchstart", function() {
+                is_move_right_mode = true;
+            });
+            document.getElementById("controller_forward").addEventListener("touchend", function() {
+                is_move_forward_mode = false;
+            });
+            document.getElementById("controller_back").addEventListener("touchend", function() {
+                is_move_back_mode = false;
+            });
+            document.getElementById("controller_left").addEventListener("touchend", function() {
+                is_move_left_mode = false;
+            });
+            document.getElementById("controller_right").addEventListener("touchend", function() {
+                is_move_right_mode = false;
+            });
+
             function move_forward(distance) {
                 if(is_pc) {
                     pointer_controls.moveForward(distance);
