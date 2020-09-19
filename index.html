@@ -1534,32 +1534,6 @@ THE SOFTWARE.
                 }
             }
 
-            // const elephant_loader = new THREE.GLTFLoader();
-            // elephant_loader.load("3dmodel/Elephant 3.glb", (gltf) => {
-            //     gltf.scene.position.y += 2.8;
-            //     scene.add(gltf.scene);
-            //     gltf.animations;
-            //     gltf.scene;
-            //     gltf.scenes;
-            //     gltf.cameras;
-            //     gltf.asset;
-            // });
-
-            const maze_loader = new THREE.GLTFLoader();
-            document.querySelector("#page_loading .loading_circle").style.display = "none";
-            document.querySelector("#page_loading progress").style.display = "inline-block";
-            show_loading();
-            maze_loader.load("3dmodel/original/maze.glb", (gltf) => {
-                scene.add(gltf.scene);
-                document.querySelector("#usage_button + label").style.display = "block";
-                document.getElementById("usage").style.display = "block";
-                hide_loading();
-            }, (xhr) => {
-                const value = Math.floor(xhr.loaded / xhr.total * 100);
-                document.querySelector("#page_loading progress").value = value;
-                document.querySelector("#page_loading span").textContent = parseInt(value, 10) + "%";
-            });
-
             const point_light = new THREE.PointLight(0xFFFFFF, 20, 50, 1.0);
             camera.add(point_light);
 
@@ -1630,6 +1604,32 @@ THE SOFTWARE.
             const curse_light = new THREE.PointLight(0xFF0000, light_intensity, light_distance, light_decay);
             curse_light.position.set(...light_position_data[2].lightPlace);
             scene.add(curse_light);
+
+            let elephant = new THREE.Object3D();
+
+            const elephant_loader = new THREE.GLTFLoader();
+            elephant_loader.load("3dmodel/Elephant 3.glb", (gltf) => {
+                const goal_place = light_position_data[0].lightPlace;
+                gltf.scene.position.set(goal_place[0], 2.8, goal_place[2])
+                elephant = gltf.scene;
+                scene.add(gltf.scene);
+            }, (xhr) => {
+            });
+
+            const maze_loader = new THREE.GLTFLoader();
+            document.querySelector("#page_loading .loading_circle").style.display = "none";
+            document.querySelector("#page_loading progress").style.display = "inline-block";
+            show_loading();
+            maze_loader.load("3dmodel/original/maze.glb", (gltf) => {
+                scene.add(gltf.scene);
+                document.querySelector("#usage_button + label").style.display = "block";
+                document.getElementById("usage").style.display = "block";
+                hide_loading();
+            }, (xhr) => {
+                const value = Math.floor(xhr.loaded / xhr.total * 100);
+                document.querySelector("#page_loading progress").value = value;
+                document.querySelector("#page_loading span").textContent = parseInt(value, 10) + "%";
+            });
 
             const raycaster_front = new THREE.Raycaster();
             const raycaster_back = new THREE.Raycaster();
@@ -1742,6 +1742,9 @@ THE SOFTWARE.
                 if(is_move_left_mode) {
                     move_right(-1 * moving_distance);
                 }
+
+                elephant.position.x += Math.sign(camera.position.x - elephant.position.x) * moving_distance;
+                elephant.position.z += Math.sign(camera.position.z - elephant.position.z) * moving_distance;
 
                 if(is_in_area(camera_position, light_position_data[0].goalArea)) {
                     show_end_message("CLEAR!");
