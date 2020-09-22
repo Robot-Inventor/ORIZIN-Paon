@@ -1607,12 +1607,18 @@ THE SOFTWARE.
 
             let elephant = new THREE.Object3D();
 
+            let is_elephant_loaded = false;
+            let is_maze_loaded = false;
+
             const elephant_loader = new THREE.GLTFLoader();
             elephant_loader.load("3dmodel/Elephant 3.glb", (gltf) => {
                 const goal_place = light_position_data[0].lightPlace;
-                gltf.scene.position.set(goal_place[0], 2.8, goal_place[2])
                 elephant = gltf.scene;
+                elephant.position.set(goal_place[0], 1.4, goal_place[2]);
+                // elephant.position.set(0, 1.4, -24);
+                elephant.scale.set(0.5, 0.5, 0.5);
                 scene.add(gltf.scene);
+                is_elephant_loaded = true;
             }, (xhr) => {
             });
 
@@ -1625,6 +1631,7 @@ THE SOFTWARE.
                 document.querySelector("#usage_button + label").style.display = "block";
                 document.getElementById("usage").style.display = "block";
                 hide_loading();
+                is_maze_loaded = true;
             }, (xhr) => {
                 const value = Math.floor(xhr.loaded / xhr.total * 100);
                 document.querySelector("#page_loading progress").value = value;
@@ -1641,6 +1648,11 @@ THE SOFTWARE.
             const camera_direction_copy3 = new THREE.Vector3();
             const axis = new THREE.Vector3(0, 1, 0);
 
+            const elephant_raycaster_front = new THREE.Raycaster();
+            const elephant_raycaster_back = new THREE.Raycaster();
+            const elephant_raycaster_left = new THREE.Raycaster();
+            const elephant_raycaster_right = new THREE.Raycaster();
+
             const distance_limit = {
                 "front": 2,
                 "back": 1,
@@ -1650,6 +1662,7 @@ THE SOFTWARE.
 
             let render_cycle = 1 / 60;
             let frame_counter = 0;
+            let is_game_over = false;
 
             function show_end_message(message) {
                 document.querySelector("#end_message p").textContent = message;
@@ -1676,84 +1689,155 @@ THE SOFTWARE.
             loop();
 
             function loop() {
-                // controls.update();
-                // fps_controls.update(clock.getDelta());
                 stats.begin();
 
-                camera.getWorldDirection(camera_direction);
-                camera.getWorldDirection(camera_direction_copy);
-                camera.getWorldDirection(camera_direction_copy2);
-                camera.getWorldDirection(camera_direction_copy3);
-                const camera_position = camera.position;
+                if(is_elephant_loaded && is_maze_loaded && !is_game_over) {
+                    camera.getWorldDirection(camera_direction);
+                    camera.getWorldDirection(camera_direction_copy);
+                    camera.getWorldDirection(camera_direction_copy2);
+                    camera.getWorldDirection(camera_direction_copy3);
+                    const camera_position = camera.position;
 
-                raycaster_front.set(camera_position, new THREE.Vector3(camera_direction.x, 0, camera_direction.z));
-                const intersects_front = raycaster_front.intersectObjects(scene.children, true);
-                if(intersects_front.length > 0) {
-                    const distance = intersects_front[0].distance;
-                    if(distance < distance_limit.front) {
-                        is_move_forward_mode = false;
-                        move_forward(distance - distance_limit.front + 0.1);
+                    raycaster_front.set(camera_position, new THREE.Vector3(camera_direction.x, 0, camera_direction.z));
+                    const intersects_front = raycaster_front.intersectObjects(scene.children, true);
+                    if(intersects_front.length > 0) {
+                        const distance = intersects_front[0].distance;
+                        if(distance < distance_limit.front) {
+                            is_move_forward_mode = false;
+                            move_forward(distance - distance_limit.front + 0.1);
+                        }
                     }
-                }
 
-                camera_direction_copy.applyAxisAngle(axis, Math.PI);
-                raycaster_back.set(camera_position, new THREE.Vector3(camera_direction_copy.x, 0, camera_direction_copy.z));
-                const intersects_back = raycaster_back.intersectObjects(scene.children, true);
-                if(intersects_back.length > 0) {
-                    const distance = intersects_back[0].distance;
-                    if(distance < distance_limit.back) {
-                        is_move_back_mode = false;
-                        move_forward(-1 * (distance - distance_limit.back + 0.1));
+                    camera_direction_copy.applyAxisAngle(axis, Math.PI);
+                    raycaster_back.set(camera_position, new THREE.Vector3(camera_direction_copy.x, 0, camera_direction_copy.z));
+                    const intersects_back = raycaster_back.intersectObjects(scene.children, true);
+                    if(intersects_back.length > 0) {
+                        const distance = intersects_back[0].distance;
+                        if(distance < distance_limit.back) {
+                            is_move_back_mode = false;
+                            move_forward(-1 * (distance - distance_limit.back + 0.1));
+                        }
                     }
-                }
 
-                camera_direction_copy2.applyAxisAngle(axis, -1 * (Math.PI / 2));
-                raycaster_right.set(camera_position, new THREE.Vector3(camera_direction_copy2.x, 0, camera_direction_copy2.z));
-                const intersects_right = raycaster_right.intersectObjects(scene.children, true);
-                if(intersects_right.length > 0) {
-                    const distance = intersects_right[0].distance;
-                    if(distance < distance_limit.right) {
-                        is_move_right_mode = false;
-                        move_right(distance - distance_limit.right + 0.1);
+                    camera_direction_copy2.applyAxisAngle(axis, -1 * (Math.PI / 2));
+                    raycaster_right.set(camera_position, new THREE.Vector3(camera_direction_copy2.x, 0, camera_direction_copy2.z));
+                    const intersects_right = raycaster_right.intersectObjects(scene.children, true);
+                    if(intersects_right.length > 0) {
+                        const distance = intersects_right[0].distance;
+                        if(distance < distance_limit.right) {
+                            is_move_right_mode = false;
+                            move_right(distance - distance_limit.right + 0.1);
+                        }
                     }
-                }
 
-                camera_direction_copy3.applyAxisAngle(axis, Math.PI / 2);
-                raycaster_left.set(camera_position, new THREE.Vector3(camera_direction_copy3.x, 0, camera_direction_copy3.z));
-                const intersects_left = raycaster_left.intersectObjects(scene.children, true);
-                if(intersects_left.length > 0) {
-                    const distance = intersects_left[0].distance;
-                    if(distance < distance_limit.left) {
-                        is_move_left_mode = false;
-                        move_right(-1 * (distance - distance_limit.left + 0.1));
+                    camera_direction_copy3.applyAxisAngle(axis, Math.PI / 2);
+                    raycaster_left.set(camera_position, new THREE.Vector3(camera_direction_copy3.x, 0, camera_direction_copy3.z));
+                    const intersects_left = raycaster_left.intersectObjects(scene.children, true);
+                    if(intersects_left.length > 0) {
+                        const distance = intersects_left[0].distance;
+                        if(distance < distance_limit.left) {
+                            is_move_left_mode = false;
+                            move_right(-1 * (distance - distance_limit.left + 0.1));
+                        }
                     }
-                }
 
-                const moving_distance = Math.min(1, 6 * render_cycle);
-                if(is_move_forward_mode) {
-                    move_forward(moving_distance);
-                }
-                if(is_move_back_mode) {
-                    move_forward(-1 * moving_distance);
-                }
-                if(is_move_right_mode) {
-                    move_right(moving_distance);
-                }
-                if(is_move_left_mode) {
-                    move_right(-1 * moving_distance);
-                }
+                    const moving_distance = Math.min(1, 6 * render_cycle);
+                    if(is_move_forward_mode) {
+                        move_forward(moving_distance);
+                    }
+                    if(is_move_back_mode) {
+                        move_forward(-1 * moving_distance);
+                    }
+                    if(is_move_right_mode) {
+                        move_right(moving_distance);
+                    }
+                    if(is_move_left_mode) {
+                        move_right(-1 * moving_distance);
+                    }
 
-                elephant.position.x += Math.sign(camera.position.x - elephant.position.x) * moving_distance;
-                elephant.position.z += Math.sign(camera.position.z - elephant.position.z) * moving_distance;
+                    let front_direction = new THREE.Vector3(0, 0, 1);
+                    elephant_raycaster_back.set(elephant.position, front_direction);
+                    front_direction.applyAxisAngle(axis, Math.PI);
+                    elephant_raycaster_front.set(elephant.position, front_direction);
+                    front_direction.applyAxisAngle(axis, Math.PI / 2);
+                    elephant_raycaster_left.set(elephant.position, front_direction);
+                    front_direction.applyAxisAngle(axis, Math.PI);
+                    elephant_raycaster_right.set(elephant.position, front_direction);
 
-                if(is_in_area(camera_position, light_position_data[0].goalArea)) {
-                    show_end_message("CLEAR!");
-                }
-                if(is_in_area(camera_position, light_position_data[1].trapArea)) {
-                    show_end_message("毒にやられた！");
-                }
-                if(is_in_area(camera_position, light_position_data[2].trapArea)) {
-                    show_end_message("呪われてしまった！");
+                    const elephant_intersects_back = elephant_raycaster_back.intersectObjects(scene.children, true);
+                    const elephant_intersects_front = elephant_raycaster_front.intersectObjects(scene.children, true);
+                    const elephant_intersects_left = elephant_raycaster_left.intersectObjects(scene.children, true);
+                    const elephant_intersects_right = elephant_raycaster_right.intersectObjects(scene.children, true);
+
+                    let is_elephant_move_forward_mode = true;
+                    let is_elephant_move_left_mode = true;
+                    let is_elephant_move_back_mode = true;
+                    let is_elephant_move_right_mode = true;
+
+                    if(elephant_intersects_back.length > 0) {
+                        const distance = elephant_intersects_back[0].distance;
+                        if(distance < 2) {
+                            is_elephant_move_back_mode = false;
+                        }
+                    }
+                    if(elephant_intersects_front.length > 0) {
+                        const distance = elephant_intersects_front[0].distance;
+                        if(distance < 2) {
+                            is_elephant_move_forward_mode = false;
+                        }
+                    }
+                    if(elephant_intersects_left.length > 0) {
+                        const distance = elephant_intersects_left[0].distance;
+                        if(distance < 2) {
+                            is_elephant_move_left_mode = false;
+                        }
+                    }
+                    if(elephant_intersects_right.length > 3) {
+                        const distance = elephant_intersects_right[3].distance;
+                        console.log(elephant_intersects_right.length);
+                        if(distance < 2) {
+                            is_elephant_move_right_mode = false;
+                        }
+                    }
+
+                    const position_difference_x = camera.position.x - elephant.position.x;
+                    const position_difference_z = camera.position.z - elephant.position.z;
+                    const elephant_x_movement_status = Math.abs(position_difference_x) > 2;
+                    const elephant_z_movement_status = Math.abs(position_difference_z) > 2;
+                    if(elephant_x_movement_status || elephant_z_movement_status) {
+                        if(elephant_x_movement_status) {
+                            if(position_difference_x > 0 && is_elephant_move_right_mode) {
+                                elephant.position.x += moving_distance * 0.7;
+                            } else if(position_difference_x < 0 && is_elephant_move_left_mode) {
+                                elephant.position.x += moving_distance * -0.7;
+                            }
+                        }
+                        if(elephant_z_movement_status) {
+                            if(position_difference_z > 0 && is_elephant_move_back_mode) {
+                                elephant.position.z += moving_distance * 0.7;
+                            } else if(position_difference_z < 0 && is_elephant_move_forward_mode) {
+                                elephant.position.z += moving_distance * -0.7;
+                            }
+                        }
+                    } else {
+                        camera.lookAt(elephant.position);
+                        show_end_message("ぱおん");
+                        is_game_over = true;
+                    }
+
+                    if(is_in_area(camera_position, light_position_data[0].goalArea)) {
+                        show_end_message("CLEAR!");
+                    }
+                    if(is_in_area(camera_position, light_position_data[1].trapArea)) {
+                        show_end_message("毒にやられた！");
+                    }
+                    if(is_in_area(camera_position, light_position_data[2].trapArea)) {
+                        show_end_message("呪われてしまった！");
+                    }
+
+                    console.log(camera_position.x - elephant.position.x);
+                    console.log(camera_position.z - elephant.position.z);
+                    console.log(camera_position);
                 }
 
                 if(is_smartphone) {
