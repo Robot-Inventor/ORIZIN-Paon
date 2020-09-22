@@ -1541,14 +1541,14 @@ THE SOFTWARE.
                 {
                     "lightPlace": [-28, 2, -54],
                     "goalArea": {
-                        "xMin": -39,
-                        "xMax": -25,
+                        "xMin": -38,
+                        "xMax": -24,
                         "zMin": -55,
                         "zMax": -52
                     },
                     "trapArea": {
-                        "xMin": -39,
-                        "xMax": -58,
+                        "xMin": -38,
+                        "xMax": -18,
                         "zMin": -55,
                         "zMax": -52
                     }
@@ -1667,6 +1667,7 @@ THE SOFTWARE.
             function show_end_message(message) {
                 document.querySelector("#end_message p").textContent = message;
                 document.getElementById("end_message").style.display = "block";
+                is_game_over = true;
                 if(is_pc) {
                     pointer_controls.unlock();
                     document.getElementById("pointer_controls_menu").style.display = "none";
@@ -1822,7 +1823,6 @@ THE SOFTWARE.
                     } else {
                         camera.lookAt(elephant.position);
                         show_end_message("ぱおん");
-                        is_game_over = true;
                     }
 
                     if(is_in_area(camera_position, light_position_data[0].goalArea)) {
