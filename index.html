@@ -387,7 +387,7 @@ THE SOFTWARE.
                             スマートフォン<br>
                             <i class="material_icon">smartphone</i>
                             <p>
-                                タッチパネルとジャイロセンサーの両方を搭載している場合に選択してください。
+                                タッチパネルとジャイロセンサーの両方を搭載している場合に選択してください。処理を軽くするため，象は追いかけてきません。
                             </p>
                         </button>
                     </div>
@@ -1066,7 +1066,7 @@ THE SOFTWARE.
         }
 
         :root {
-            --controller_size: 20vmin;
+            --controller_size: calc((20vmin + 20vmax) / 2);
             --controller_bg: white;
             --controller_bg_hover: rgb(230, 230, 230);
             --controller_bg_active: rgb(205, 205, 205);
@@ -1620,7 +1620,13 @@ THE SOFTWARE.
                 is_rotation_right_mode = false;
             });
 
-            const point_light = new THREE.PointLight(0xFFFFFF, 20, 50, 1.0);
+            let point_light_intensity;
+            if(is_pc) {
+                point_light_intensity = 20;
+            } else {
+                point_light_intensity = 40;
+            }
+            const point_light = new THREE.PointLight(0xFFFFFF, point_light_intensity, 50, 1.0);
             camera.add(point_light);
 
             const light_position_data = [
@@ -1696,17 +1702,21 @@ THE SOFTWARE.
             let is_elephant_loaded = false;
             let is_maze_loaded = false;
 
-            const elephant_loader = new THREE.GLTFLoader();
-            elephant_loader.load("3dmodel/Elephant 3.glb", (gltf) => {
-                const goal_place = light_position_data[0].lightPlace;
-                elephant = gltf.scene;
-                elephant.position.set(goal_place[0], 1.4, goal_place[2]);
-                // elephant.position.set(0, 1.4, -24);
-                elephant.scale.set(0.5, 0.5, 0.5);
-                scene.add(gltf.scene);
+            if(is_pc) {
+                const elephant_loader = new THREE.GLTFLoader();
+                elephant_loader.load("3dmodel/Elephant 3.glb", (gltf) => {
+                    const goal_place = light_position_data[0].lightPlace;
+                    elephant = gltf.scene;
+                    elephant.position.set(goal_place[0], 1.4, goal_place[2]);
+                    // elephant.position.set(0, 1.4, -24);
+                    elephant.scale.set(0.5, 0.5, 0.5);
+                    scene.add(gltf.scene);
+                    is_elephant_loaded = true;
+                }, (xhr) => {
+                });
+            } else {
                 is_elephant_loaded = true;
-            }, (xhr) => {
-            });
+            }
 
             const maze_loader = new THREE.GLTFLoader();
             document.querySelector("#page_loading .loading_circle").style.display = "none";
@@ -1843,7 +1853,7 @@ THE SOFTWARE.
                     }
 
                     if(is_smartphone) {
-                        const camera_rotation_size = 0.025;
+                        const camera_rotation_size = 0.5 * render_cycle;
                         let euler = new THREE.Euler(0, 0, 0, 'YXZ');
                         const min_polar_angle = 0;
                         const max_polar_angle = Math.PI;
@@ -1866,72 +1876,74 @@ THE SOFTWARE.
                         camera.quaternion.setFromEuler(euler);
                     }
 
-                    let front_direction = new THREE.Vector3(0, 0, 1);
-                    elephant_raycaster_back.set(elephant.position, front_direction);
-                    front_direction.applyAxisAngle(y_axis, Math.PI);
-                    elephant_raycaster_front.set(elephant.position, front_direction);
-                    front_direction.applyAxisAngle(y_axis, Math.PI / 2);
-                    elephant_raycaster_left.set(elephant.position, front_direction);
-                    front_direction.applyAxisAngle(y_axis, Math.PI);
-                    elephant_raycaster_right.set(elephant.position, front_direction);
+                    if(is_pc) {
+                        let front_direction = new THREE.Vector3(0, 0, 1);
+                        elephant_raycaster_back.set(elephant.position, front_direction);
+                        front_direction.applyAxisAngle(y_axis, Math.PI);
+                        elephant_raycaster_front.set(elephant.position, front_direction);
+                        front_direction.applyAxisAngle(y_axis, Math.PI / 2);
+                        elephant_raycaster_left.set(elephant.position, front_direction);
+                        front_direction.applyAxisAngle(y_axis, Math.PI);
+                        elephant_raycaster_right.set(elephant.position, front_direction);
 
-                    const elephant_intersects_back = elephant_raycaster_back.intersectObjects(scene.children, true);
-                    const elephant_intersects_front = elephant_raycaster_front.intersectObjects(scene.children, true);
-                    const elephant_intersects_left = elephant_raycaster_left.intersectObjects(scene.children, true);
-                    const elephant_intersects_right = elephant_raycaster_right.intersectObjects(scene.children, true);
+                        const elephant_intersects_back = elephant_raycaster_back.intersectObjects(scene.children, true);
+                        const elephant_intersects_front = elephant_raycaster_front.intersectObjects(scene.children, true);
+                        const elephant_intersects_left = elephant_raycaster_left.intersectObjects(scene.children, true);
+                        const elephant_intersects_right = elephant_raycaster_right.intersectObjects(scene.children, true);
 
-                    let is_elephant_move_forward_mode = true;
-                    let is_elephant_move_left_mode = true;
-                    let is_elephant_move_back_mode = true;
-                    let is_elephant_move_right_mode = true;
+                        let is_elephant_move_forward_mode = true;
+                        let is_elephant_move_left_mode = true;
+                        let is_elephant_move_back_mode = true;
+                        let is_elephant_move_right_mode = true;
 
-                    if(elephant_intersects_back.length > 0) {
-                        const distance = elephant_intersects_back[0].distance;
-                        if(distance < 2) {
-                            is_elephant_move_back_mode = false;
-                        }
-                    }
-                    if(elephant_intersects_front.length > 0) {
-                        const distance = elephant_intersects_front[0].distance;
-                        if(distance < 2) {
-                            is_elephant_move_forward_mode = false;
-                        }
-                    }
-                    if(elephant_intersects_left.length > 0) {
-                        const distance = elephant_intersects_left[0].distance;
-                        if(distance < 2) {
-                            is_elephant_move_left_mode = false;
-                        }
-                    }
-                    if(elephant_intersects_right.length > 3) {
-                        const distance = elephant_intersects_right[3].distance;
-                        if(distance < 2) {
-                            is_elephant_move_right_mode = false;
-                        }
-                    }
-
-                    const position_difference_x = camera.position.x - elephant.position.x;
-                    const position_difference_z = camera.position.z - elephant.position.z;
-                    const elephant_x_movement_status = Math.abs(position_difference_x) > 2;
-                    const elephant_z_movement_status = Math.abs(position_difference_z) > 2;
-                    if(elephant_x_movement_status || elephant_z_movement_status) {
-                        if(elephant_x_movement_status) {
-                            if(position_difference_x > 0 && is_elephant_move_right_mode) {
-                                elephant.position.x += moving_distance * 0.7;
-                            } else if(position_difference_x < 0 && is_elephant_move_left_mode) {
-                                elephant.position.x += moving_distance * -0.7;
+                        if(elephant_intersects_back.length > 0) {
+                            const distance = elephant_intersects_back[0].distance;
+                            if(distance < 2) {
+                                is_elephant_move_back_mode = false;
                             }
                         }
-                        if(elephant_z_movement_status) {
-                            if(position_difference_z > 0 && is_elephant_move_back_mode) {
-                                elephant.position.z += moving_distance * 0.7;
-                            } else if(position_difference_z < 0 && is_elephant_move_forward_mode) {
-                                elephant.position.z += moving_distance * -0.7;
+                        if(elephant_intersects_front.length > 0) {
+                            const distance = elephant_intersects_front[0].distance;
+                            if(distance < 2) {
+                                is_elephant_move_forward_mode = false;
                             }
                         }
-                    } else {
-                        camera.lookAt(elephant.position);
-                        show_end_message("ぱおん");
+                        if(elephant_intersects_left.length > 0) {
+                            const distance = elephant_intersects_left[0].distance;
+                            if(distance < 2) {
+                                is_elephant_move_left_mode = false;
+                            }
+                        }
+                        if(elephant_intersects_right.length > 3) {
+                            const distance = elephant_intersects_right[3].distance;
+                            if(distance < 2) {
+                                is_elephant_move_right_mode = false;
+                            }
+                        }
+
+                        const position_difference_x = camera.position.x - elephant.position.x;
+                        const position_difference_z = camera.position.z - elephant.position.z;
+                        const elephant_x_movement_status = Math.abs(position_difference_x) > 2;
+                        const elephant_z_movement_status = Math.abs(position_difference_z) > 2;
+                        if(elephant_x_movement_status || elephant_z_movement_status) {
+                            if(elephant_x_movement_status) {
+                                if(position_difference_x > 0 && is_elephant_move_right_mode) {
+                                    elephant.position.x += moving_distance * 0.7;
+                                } else if(position_difference_x < 0 && is_elephant_move_left_mode) {
+                                    elephant.position.x += moving_distance * -0.7;
+                                }
+                            }
+                            if(elephant_z_movement_status) {
+                                if(position_difference_z > 0 && is_elephant_move_back_mode) {
+                                    elephant.position.z += moving_distance * 0.7;
+                                } else if(position_difference_z < 0 && is_elephant_move_forward_mode) {
+                                    elephant.position.z += moving_distance * -0.7;
+                                }
+                            }
+                        } else {
+                            camera.lookAt(elephant.position);
+                            show_end_message("ぱおん");
+                        }
                     }
 
                     if(is_in_area(camera_position, light_position_data[0].goalArea)) {
