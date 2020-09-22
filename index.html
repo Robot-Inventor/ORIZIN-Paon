@@ -1662,12 +1662,10 @@ THE SOFTWARE.
 
             let render_cycle = 1 / 60;
             let frame_counter = 0;
-            let is_game_over = false;
 
             function show_end_message(message) {
                 document.querySelector("#end_message p").textContent = message;
                 document.getElementById("end_message").style.display = "block";
-                is_game_over = true;
                 if(is_pc) {
                     pointer_controls.unlock();
                     setTimeout(() => {
@@ -1694,7 +1692,7 @@ THE SOFTWARE.
             function loop() {
                 stats.begin();
 
-                if(is_elephant_loaded && is_maze_loaded && !is_game_over) {
+                if(is_elephant_loaded && is_maze_loaded) {
                     camera.getWorldDirection(camera_direction);
                     camera.getWorldDirection(camera_direction_copy);
                     camera.getWorldDirection(camera_direction_copy2);
