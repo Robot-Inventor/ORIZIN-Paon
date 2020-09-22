@@ -1797,7 +1797,6 @@ THE SOFTWARE.
                     }
                     if(elephant_intersects_right.length > 3) {
                         const distance = elephant_intersects_right[3].distance;
-                        console.log(elephant_intersects_right.length);
                         if(distance < 2) {
                             is_elephant_move_right_mode = false;
                         }
@@ -1836,10 +1835,6 @@ THE SOFTWARE.
                     if(is_in_area(camera_position, light_position_data[2].trapArea)) {
                         show_end_message("呪われてしまった！");
                     }
-
-                    console.log(camera_position.x - elephant.position.x);
-                    console.log(camera_position.z - elephant.position.z);
-                    console.log(camera_position);
                 }
 
                 if(is_smartphone) {
