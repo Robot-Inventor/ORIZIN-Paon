@@ -439,6 +439,7 @@ THE SOFTWARE.
             <div class="controller_right" id="controller_right"></div>
             <div class="controller_left" id="controller_left"></div>
         </div>
+        <div id="time_limit_display"></div>
         <div id="end_message">
             <p></p>
             <menu>
@@ -1159,6 +1160,18 @@ THE SOFTWARE.
             top: calc(100vh - var(--controller_size) - 1rem);
             display: none;
         }
+
+        #time_limit_display {
+            width: auto;
+            height: auto;
+            position: fixed;
+            top: 0;
+            left: 0;
+            margin: 0;
+            padding: 1rem;
+            z-index: 2;
+            font-size: 200%;
+        }
     </style>
     <script src="javascript/Stats.js"></script>
     <script src="javascript/three.min.js"></script>
@@ -1782,6 +1795,22 @@ THE SOFTWARE.
                 frame_counter = 0;
             }, 1000);
 
+            let is_game_started = false;
+            let time_limit = 600;
+            document.getElementById("time_limit_display").textContent = "残り" + time_limit + "秒";
+            setInterval(function() {
+                if(is_game_started && time_limit) {
+                    time_limit -= 1;
+                    if(time_limit <= 60) {
+                        document.getElementById("time_limit_display").style.color = "red";
+                    }
+                    document.getElementById("time_limit_display").textContent = "残り" + time_limit + "秒";
+                    if(time_limit === 0) {
+                        show_end_message("時間切れ");
+                    }
+                }
+            }, 1000);
+
             resize_canvas();
             loop();
 
@@ -1789,6 +1818,8 @@ THE SOFTWARE.
                 stats.begin();
 
                 if(is_elephant_loaded && is_maze_loaded) {
+                    is_game_started = true;
+
                     camera.getWorldDirection(camera_direction);
                     camera.getWorldDirection(camera_direction_copy);
                     camera.getWorldDirection(camera_direction_copy2);
