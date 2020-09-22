@@ -1670,7 +1670,9 @@ THE SOFTWARE.
                 is_game_over = true;
                 if(is_pc) {
                     pointer_controls.unlock();
-                    document.getElementById("pointer_controls_menu").style.display = "none";
+                    setTimeout(() => {
+                        document.getElementById("pointer_controls_menu").style.display = "none";
+                    }, 100);
                 }
             }
 
